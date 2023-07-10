@@ -1,0 +1,20 @@
+{
+  "name": "nick-tan-wk13-project",
+  "version": "1.0.0",
+  "description": "<!--!!START SILENT --> # AirBnB Clone <!--!!END --> <!--!!ADD --> <!-- # `<name of application here>` --> <!--!!END_ADD -->",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nita94/git_NT_wk13_AuthenticateMe_Airbnb.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nita94/git_NT_wk13_AuthenticateMe_Airbnb/issues"
+  },
+  "homepage": "https://github.com/nita94/git_NT_wk13_AuthenticateMe_Airbnb#readme"
+}
