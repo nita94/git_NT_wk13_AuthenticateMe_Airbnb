@@ -78,4 +78,18 @@ app.use((err, _req, res, _next) => {
   });
 });
 
+app.get('/', (req, res) => {
+  res.json({ message: 'Welcome to the API!' });
+});
+
+// Catch unhandled requests and forward to error handler.
+app.use((_req, _res, next) => {
+  const err = new Error("The requested resource couldn't be found.");
+  err.title = "Resource Not Found";
+  err.errors = { message: "The requested resource couldn't be found." };
+  err.status = 404;
+  next(err);
+});
+
+
 module.exports = app;
