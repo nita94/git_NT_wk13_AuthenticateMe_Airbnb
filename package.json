@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/nita94/git_NT_wk13_AuthenticateMe_Airbnb/issues"
   },
-  "homepage": "https://github.com/nita94/git_NT_wk13_AuthenticateMe_Airbnb#readme"
+  "homepage": "https://github.com/nita94/git_NT_wk13_AuthenticateMe_Airbnb#readme",
+  "dependencies": {
+    "express-validator": "^7.0.1"
+  }
 }
