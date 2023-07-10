@@ -39,9 +39,11 @@ app.use(
   })
 );
 
-// Add routes later
-
 app.use(routes);
+
+app.get('/', (req, res) => {
+  res.json({ message: 'Welcome to the API!' });
+});
 
 // Catch unhandled requests and forward to error handler.
 app.use((_req, _res, next) => {
@@ -54,7 +56,7 @@ app.use((_req, _res, next) => {
 
 // Process Sequelize errors
 app.use((err, _req, _res, next) => {
-  // Check if the error is a Sequelize error
+  // Check if error is a Sequelize error
   if (err instanceof ValidationError) {
     let errors = {};
     for (let error of err.errors) {
@@ -77,19 +79,5 @@ app.use((err, _req, res, _next) => {
     stack: isProduction ? null : err.stack
   });
 });
-
-app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to the API!' });
-});
-
-// Catch unhandled requests and forward to error handler.
-app.use((_req, _res, next) => {
-  const err = new Error("The requested resource couldn't be found.");
-  err.title = "Resource Not Found";
-  err.errors = { message: "The requested resource couldn't be found." };
-  err.status = 404;
-  next(err);
-});
-
 
 module.exports = app;
