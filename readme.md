@@ -8,7 +8,7 @@
 ## Database Schema Design
 
 <!--!!START SILENT -->
-![airbnb-database-schema](/home/nickt/AA_NickTan/Nick-Tan-Wk13-Project/images/airbnb_dbdiagram.png)
+![airbnb-database-schema](./images/airbnb_dbdiagram.png)
 
 [airbnb-database-schema]: /home/nickt/AA_NickTan/Nick-Tan-Wk13-Project/images/airbnb_dbdiagram.png
 [airbnb-db-diagram-info]: https://appacademy-open-assets.s3.us-west-1.amazonaws.com/Modular-Curriculum/content/week-12/airbnb-db-diagram-info.txt

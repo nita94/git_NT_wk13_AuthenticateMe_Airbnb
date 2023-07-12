@@ -39,9 +39,11 @@ app.use(
   })
 );
 
-// Add routes later
-
 app.use(routes);
+
+app.get('/', (req, res) => {
+  res.json({ message: 'Welcome to the API!' });
+});
 
 // Catch unhandled requests and forward to error handler.
 app.use((_req, _res, next) => {
@@ -54,7 +56,7 @@ app.use((_req, _res, next) => {
 
 // Process Sequelize errors
 app.use((err, _req, _res, next) => {
-  // Check if the error is a Sequelize error
+  // Check if error is a Sequelize error
   if (err instanceof ValidationError) {
     let errors = {};
     for (let error of err.errors) {

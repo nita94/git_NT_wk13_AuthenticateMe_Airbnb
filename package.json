@@ -1,8 +1,28 @@
 {
-  "devDependencies": {
-    "sequelize-cli": "^6.6.1"
+  "name": "nick-tan-wk13-project",
+  "version": "1.0.0",
+  "description": "<!--!!START SILENT --> # AirBnB Clone <!--!!END --> <!--!!ADD --> <!-- # `<name of application here>` --> <!--!!END_ADD -->",
+  "main": "index.js",
+  "scripts": {
+    "install": "npm --prefix backend install backend",
+    "dev:backend": "npm install --prefix backend start",
+    "sequelize": "npm run --prefix backend sequelize",
+    "sequelize-cli": "npm run --prefix backend sequelize-cli",
+    "start": "npm start --prefix backend",
+    "build": "npm run --prefix backend build"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nita94/git_NT_wk13_AuthenticateMe_Airbnb.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nita94/git_NT_wk13_AuthenticateMe_Airbnb/issues"
+  },
+  "homepage": "https://github.com/nita94/git_NT_wk13_AuthenticateMe_Airbnb#readme",
   "dependencies": {
-    "sequelize": "^6.32.1"
+    "express-validator": "^7.0.1"
   }
 }
