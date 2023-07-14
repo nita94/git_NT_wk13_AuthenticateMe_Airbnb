@@ -59,7 +59,8 @@ module.exports = {
 
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeConstraint('Bookings', 'Bookings_endDate_check');
+    // await queryInterface.removeConstraint('Bookings', 'Bookings_endDate_check');
     await queryInterface.dropTable('Bookings');
   }
+  
 };
