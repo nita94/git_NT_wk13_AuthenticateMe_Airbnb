@@ -1,7 +1,7 @@
 // backend/config/database.js
 const config = require('./index');
 
-console.log(`Using SQLite database file: ${config.dbFile}`); // Add this line
+//console.log(`Using SQLite database file: ${config.dbFile}`); // Add this line
 
 module.exports = {
   development: {
