@@ -1,4 +1,3 @@
-// Booking.js
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
@@ -18,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'Booking',
+      tableName: 'bookings', // explicitly set the table name to lowercase
     }
   );
 

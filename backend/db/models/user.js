@@ -52,6 +52,7 @@ module.exports = (sequelize, DataTypes) => {
   {
     sequelize,
     modelName: 'User',
+    tableName: 'users', // explicitly set the table name to lowercase
     defaultScope: {
       attributes: {
         exclude: ['hashedPassword', 'email', 'createdAt', 'updatedAt'],
