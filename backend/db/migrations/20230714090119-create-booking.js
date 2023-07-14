@@ -1,4 +1,5 @@
-'use strict';
+/** @type {import('sequelize-cli').Migration} */
+
 let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
@@ -15,17 +16,17 @@ module.exports = {
       },
       spotId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: 'Spots' },
-        onDelete: 'CASCADE',
-        hooks: true
+        references: {
+          model: 'Spots'
+        },
+        onDelete: 'CASCADE'
       },
       userId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: 'Users' },
-        onDelete: 'CASCADE',
-        hooks: true
+        references: {
+          model: 'Users'
+        },
+        onDelete: 'CASCADE'
       },
       startDate: {
         type: Sequelize.DATE,
@@ -47,19 +48,18 @@ module.exports = {
       }
     }, options);
 
-    options.tableName = 'Bookings';
-    await queryInterface.addConstraint(options, {
+    await queryInterface.addConstraint('Bookings', {
       fields: ['endDate'],
       type: 'check',
       where: {
         endDate: { [Sequelize.Op.gte]: Sequelize.col('startDate') },
       },
       name: 'Bookings_endDate_check'
-    }, options);
+    });
+
   },
   async down(queryInterface, Sequelize) {
-    options.tableName = 'Bookings';
-    await queryInterface.removeConstraint(options, 'Bookings_endDate_check');
+    await queryInterface.removeConstraint('Bookings', 'Bookings_endDate_check');
     await queryInterface.dropTable('Bookings');
   }
 };

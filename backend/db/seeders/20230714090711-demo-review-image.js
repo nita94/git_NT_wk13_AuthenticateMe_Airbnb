@@ -1,35 +1,32 @@
 'use strict';
 
-const { ReviewImage } = require('../models');
-
 let options = {};
 if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA; // define your schema in options object
+  options.schema = process.env.SCHEMA;  // define your schema in options object
 }
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  up: async (queryInterface, Sequelize) => {
     options.tableName = 'ReviewImages';
-    const reviewImages = [
+    return queryInterface.bulkInsert(options, [
       {
         reviewId: 1,
-        url: "image1.jpg"
+        url: "first url",
       },
       {
         reviewId: 2,
-        url: "image2.jpg"
+        url: "second url",
       },
       {
         reviewId: 3,
-        url: "image3.jpg"
-      }
-    ];
+        url: "third url",
+      },
 
-    return ReviewImage.bulkCreate(reviewImages, { validate: true });
+    ], {});
   },
 
-  async down(queryInterface, Sequelize) {
+  down: async (queryInterface, Sequelize) => {
     options.tableName = 'ReviewImages';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
