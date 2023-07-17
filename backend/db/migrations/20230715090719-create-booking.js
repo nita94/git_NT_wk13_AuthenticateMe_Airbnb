@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('bookings', {
+    await queryInterface.createTable('Bookings', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -48,19 +48,19 @@ module.exports = {
       }
     }, options);
 
-    await queryInterface.addConstraint('bookings', {
+    await queryInterface.addConstraint('Bookings', {
       fields: ['endDate'],
       type: 'check',
       where: {
         endDate: { [Sequelize.Op.gte]: Sequelize.col('startDate') },
       },
-      name: 'bookings_endDate_check'
+      name: 'Bookings_endDate_check'
     });
 
   },
   async down(queryInterface, Sequelize) {
-    // await queryInterface.removeConstraint('bookings', 'bookings_endDate_check');
-    options.tableName = 'bookings'
+    // await queryInterface.removeConstraint('Bookings', 'Bookings_endDate_check');
+    options.tableName = 'Bookings'
     await queryInterface.dropTable(options);
   }
   
