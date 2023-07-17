@@ -17,7 +17,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'Booking',
-      tableName: 'bookings', // explicitly set the table name to lowercase
     }
   );
 

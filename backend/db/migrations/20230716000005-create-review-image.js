@@ -1,3 +1,4 @@
+'use strict';
 /** @type {import('sequelize-cli').Migration} */
 
 let options = {};
@@ -7,34 +8,22 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Bookings', {
+    await queryInterface.createTable('ReviewImages', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      spotId: {
+      reviewId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Spots'
+          model: 'Reviews'
         },
         onDelete: 'CASCADE'
       },
-      userId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Users'
-        },
-        onDelete: 'CASCADE'
-      },
-      startDate: {
-        type: Sequelize.DATE,
-        allowNull: false
-      },
-      endDate: {
-        type: Sequelize.DATE,
-        allowNull: false
+      url: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -47,21 +36,9 @@ module.exports = {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     }, options);
-
-    await queryInterface.addConstraint('Bookings', {
-      fields: ['endDate'],
-      type: 'check',
-      where: {
-        endDate: { [Sequelize.Op.gte]: Sequelize.col('startDate') },
-      },
-      name: 'Bookings_endDate_check'
-    });
-
   },
   async down(queryInterface, Sequelize) {
-    // await queryInterface.removeConstraint('Bookings', 'Bookings_endDate_check');
-    options.tableName = 'Bookings'
-    await queryInterface.dropTable(options);
+    options.tableName = 'ReviewImages'
+    await queryInterface.dropTable('ReviewImages');
   }
-  
 };
