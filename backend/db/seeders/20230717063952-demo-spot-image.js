@@ -15,17 +15,17 @@ module.exports = {
     await SpotImage.bulkCreate([
       {
         spotId: 1,
-        url: "http://www.sandiego.com",
+        url: "http://www.travelLA.com",
         preview: true
       },
       {
         spotId: 2,
-        url: "http://www.denver.com",
+        url: "http://www.travelSE.com",
         preview: true
       },
       {
         spotId: 3,
-        url: "http://www.miami.com",
+        url: "http://www.travelCHI.com",
         preview: true
       }
     ], { validate: true });
