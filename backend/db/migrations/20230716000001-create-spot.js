@@ -17,39 +17,40 @@ module.exports = {
       },
       ownerId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: 'Users'
         },
         onDelete: 'CASCADE'
       },
       address: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(256),
         allowNull: false
       },
       city: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(30),
         allowNull: false
       },
       state: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(30),
         allowNull: false
       },
       country: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(30),
         allowNull: false
       },
       lat: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.DECIMAL
       },
       lng: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.DECIMAL
       },
       name: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(256),
         allowNull: false
       },
       description: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(256),
         allowNull: false
       },
       price: {
@@ -69,7 +70,7 @@ module.exports = {
     }, options);
   },
   async down(queryInterface, Sequelize) {
-    options.tableName = 'Spots';
-    await queryInterface.dropTable('Spots');
+    options.tableName = "Spots";
+    await queryInterface.dropTable(options);
   }
 };

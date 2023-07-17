@@ -17,16 +17,19 @@ module.exports = {
       },
       spotId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: 'Spots'
         },
         onDelete: 'CASCADE'
       },
       url: {
-        type: Sequelize.TEXT,
+        type: Sequelize.STRING(256),
+        allowNull: false
       },
       preview: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
@@ -40,8 +43,9 @@ module.exports = {
       }
     }, options);
   },
+
   async down(queryInterface, Sequelize) {
-    options.tableName = 'SpotImages'
-    await queryInterface.dropTable('SpotImages');
+    options.tableName = "SpotImages";
+    await queryInterface.dropTable(options);
   }
 };

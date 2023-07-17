@@ -17,13 +17,15 @@ module.exports = {
       },
       reviewId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: 'Reviews'
         },
         onDelete: 'CASCADE'
       },
       url: {
-        type: Sequelize.TEXT
+        type: Sequelize.STRING(256),
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
@@ -37,8 +39,9 @@ module.exports = {
       }
     }, options);
   },
+
   async down(queryInterface, Sequelize) {
-    options.tableName = 'ReviewImages'
-    await queryInterface.dropTable('ReviewImages');
+    options.tableName = "ReviewImages";
+    await queryInterface.dropTable(options);
   }
 };

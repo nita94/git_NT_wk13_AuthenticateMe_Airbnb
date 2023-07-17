@@ -16,26 +16,26 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       firstName: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: Sequelize.STRING(30),
+        allowNull: false
       },
       lastName: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: Sequelize.STRING(30),
+        allowNull: false
       },
       username: {
         type: Sequelize.STRING(30),
         allowNull: false,
-        unique: true,
+        unique: true
       },
       email: {
         type: Sequelize.STRING(256),
         allowNull: false,
-        unique: true,
+        unique: true
       },
       hashedPassword: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: Sequelize.STRING.BINARY,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
@@ -49,8 +49,9 @@ module.exports = {
       }
     }, options);
   },
+
   async down(queryInterface, Sequelize) {
     options.tableName = "Users";
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable(options);
   }
 };
