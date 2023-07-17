@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
 
   Review.init(
     {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
       spotId: {
         type: DataTypes.INTEGER,
         references: {
@@ -45,6 +50,3 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'Review',
     }
   );
-
-  return Review;
-};
