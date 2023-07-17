@@ -438,6 +438,18 @@ router.get("/", async (req, res, next) => {
       if (size >= 1 && page >= 1 && size <= 20 && page <= 10) {
             pagination.limit = size;
             pagination.offset = size * (page - 1)
+      } else if (page < 1) {
+            res.status(400);
+            return res.json({
+                  "message": "Bad Request",
+                  "errors": "Page must be greater than or equal to 1"
+            });
+      } else if (size < 1) {
+            res.status(400);
+            return res.json({
+                  "message": "Bad Request",
+                  "errors": "Size must be greater than or equal to 1"
+            });
       } else {
             pagination.limit = 20;
             pagination.offset = 0;
@@ -516,7 +528,7 @@ router.get("/", async (req, res, next) => {
 
       });
 
-      return res.json({Spots: spotsArray});
+      return res.json({Spots: spotsArray, page: Number(page), size: Number(size)});
 });
 
 router.post("/:spotId/bookings", requireAuth, async (req, res, next) => {
