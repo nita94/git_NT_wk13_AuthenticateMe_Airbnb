@@ -572,7 +572,7 @@ router.post("/:spotId/bookings", requireAuth, async (req, res, next) => {
 
       if (curSpot.ownerId === req.user.id) {
             res.status(403);
-            return res.json({"message": "Forbidden"});
+            return res.json({"message": "Error: Forbidden"});
       };
 
       //=================================================

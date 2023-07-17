@@ -127,7 +127,7 @@ router.put("/:reviewId", requireAuth, async (req, res, next) => {
       if(curReview.userId !== req.user.id) {
             res.status(403);
             return res.json({
-                  "message": "Forbidden"
+                  "message": "Erorr: Forbidden"
                 })
       };
 
