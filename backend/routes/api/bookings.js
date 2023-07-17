@@ -1,166 +1,371 @@
-const express = require('express')
-const { check } = require('express-validator');
-const{requireAuth} = require('../../utils/auth')
-const { Op } = require('sequelize')
-const { handleValidationErrors } = require('../../utils/validation');
+const express = require("express");
+const { Op } = require("sequelize");
+const bcrypt = require("bcryptjs");
 
-const { User, Spot, SpotImage, Review, ReviewImage, sequelize, Booking } = require('../../db/models');
+const { setTokenCookie, requireAuth } = require("../../utils/auth");
+const { User, Spot, Review, Booking, ReviewImage, SpotImage } = require("../../db/models");
+
+const { check } = require("express-validator");
+const { handleValidationErrors } = require("../../utils/validation");
+
 const router = express.Router();
 
+router.get("/current", requireAuth, async (req, res, next) => {
 
+      const userBookings = await Booking.findAll({
+            where: {
+                  userId: req.user.id
+            },
+            include: [
+                  {model: Spot, attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price'], include: SpotImage},
+            ]
+      });
 
-router.get('/current', requireAuth, async (req, res, next)=> {
-    const currentUser = req.user.id;
+      const bookingsArray = [];
+      const confirmedBooking = [];
 
-    const allBookings = await Booking.findAll({
-        where: {userId: currentUser},
-        include: [
-            {
-                model: Spot,
-            }
-        ]
-    })
+      userBookings.forEach(booking => {
+            bookingsArray.push(booking.toJSON());
+      });
 
-    const bookingsWithSpotPreview = await Promise.all(
-        allBookings.map(async (booking) => {
-            const spot = booking.Spot;
-            const images = await SpotImage.findAll({
-                where : { spotId: spot.id },
+      bookingsArray.forEach(booking => {
+
+            booking.Spot.SpotImages.forEach(image => {
+
+                  if(image.preview === true) {
+                        booking.Spot.previewImage = image.url
+                  };
             });
 
-            return {
-                ...booking.get(),
-                Spot: {
-                    id: spot.id,
-                    ownerId: spot.ownerId,
-                    address: spot.address,
-                    city: spot.city,
-                    state: spot.state,
-                    country: spot.country,
-                    lat: spot.lat,
-                    lng: spot.lng,
-                    name: spot.name,
-                    description: spot.description,
-                    price: spot.price,
-                    previewImage: images.length > 0 ? images[0].url : null,
-                }
+            if(!booking.Spot.previewImage) {
+                  booking.Spot.previewImage = "There is no preview image"
             };
-        })
-    );
 
-    res.json({ Bookings: bookingsWithSpotPreview });
-})
+            delete booking.Spot.SpotImages;
 
+            // ==========================================================
+            // Formatting dates
+            // ==========================================================
 
+            const s = booking.startDate;
 
-router.put('/:bookingId', requireAuth, async (req, res, next) => {
-    const bookingId = req.params.bookingId;
-    const currentUser = req.user.id;
-    const editedBooking = await Booking.findByPk(bookingId);
+            const sYear = s.getFullYear();
+            const preSMonth = s.getMonth() + 1;
+            const sMonth = preSMonth < 10 ? "0" + preSMonth : preSMonth;
+            const preSDay = s.getDate();
+            const sDay = preSDay < 10 ? "0" + preSDay : preSDay;
+            const sTime = s.toTimeString().substring(0, 8);
 
+            const formatedStartDate = sYear + "-" + sMonth + "-" + sDay;
 
-    if(!editedBooking){
-        res.status(404).json({
-            "message": "Booking couldn't be found"
-        })
-    }
-    const owner = editedBooking.userId
-    if(currentUser !== owner){
-        res.status(403).json({
-            "message": "Current user is prohibited from accessing the selected data"
-        })
-    }
-    const { startDate, endDate } = req.body;
-    let errors = {}
+            //===========================
 
+            const e = booking.endDate;
 
-    const newStartDate = startDate !== undefined ? startDate : editedBooking.startDate;
-    const newEndDate = endDate !== undefined ? endDate : editedBooking.endDate;
+            const eYear = e.getFullYear();
+            const preEMonth = e.getMonth() + 1;
+            const eMonth = preEMonth < 10 ? "0" + preEMonth : preEMonth;
+            const preEDay = e.getDate();
+            const eDay = preEDay < 10 ? "0" + preEDay : preEDay;
+            const eTime = e.toTimeString().substring(0, 8);
 
+            const formatedEndDate = eYear + "-" + eMonth + "-" + eDay;
 
-    if(new Date(newStartDate) >= new Date(newEndDate)){
-        errors.date = "Start date cannot be on or after end date";
-    } else {
+            //===========================
 
-        const conflictingBooking = await Booking.findOne({
+            const c = booking.createdAt;
+
+            const cYear = c.getFullYear();
+            const preCMonth = c.getMonth() + 1;
+            const cMonth = preCMonth < 10 ? "0" + preCMonth : preCMonth;
+            const preCDay = c.getDate();
+            const cDay = preCDay < 10 ? "0" + preCDay : preCDay;
+            const cTime = c.toTimeString().substring(0, 8);
+
+            const formatedCreatedDate = cYear + "-" + cMonth + "-" + cDay + " " + cTime;
+
+            //===========================
+
+            const u = booking.updatedAt;
+
+            const uYear = u.getFullYear();
+            const preUMonth = u.getMonth() + 1;
+            const uMonth = preUMonth < 10 ? "0" + preUMonth : preUMonth;
+            const preUDay = u.getDate();
+            const uDay = preUDay < 10 ? "0" + preUDay : preUDay;
+            const uTime = u.toTimeString().substring(0, 8);
+
+            const formatedUpdatedDate = uYear + "-" + uMonth + "-" + uDay + " " + uTime;
+
+            // ==========================================================
+            // ==========================================================
+
+            booking.startDate = formatedStartDate;
+            booking.endDate = formatedEndDate;
+            booking.createdAt = formatedCreatedDate;
+            booking.updatedAt = formatedUpdatedDate;
+
+            const { id, spotId, userId, startDate, endDate, createdAt, updatedAt, Spot } = booking;
+
+            const confirmed = {
+                  id,
+                  spotId,
+                  Spot,
+                  userId,
+                  startDate,
+                  endDate,
+                  createdAt,
+                  updatedAt
+            };
+
+            confirmedBooking.push(confirmed);
+       });
+
+      return res.json({"Bookings": confirmedBooking});
+
+});
+
+router.put("/:bookingId", requireAuth, async (req, res, next) => {
+
+      const { startDate, endDate } = req.body;
+
+      //=================================
+      // Dropping leading zero from date
+
+      const startDateArray = startDate.split('-');
+
+      if (startDateArray[2][0] === '0') {
+            startDate = startDateArray[0] + "-" + startDateArray[1] + "-" + startDateArray[2][1];
+      };
+
+      const startEndArray = endDate.split('-');
+
+      if (startEndArray[2][0] === '0') {
+            endDate = startEndArray[0] + "-" + startEndArray[1] + "-" + startEndArray[2][1];
+      };
+      //=================================
+
+      function datesBetween(startD, endD) {
+            const currentD = new Date(startD.getTime());
+            const dates = [];
+            while (currentD <= endD) {
+              dates.push(new Date(currentD));
+              currentD.setDate(currentD.getDate() + 1);
+            };
+            return dates;
+      };
+
+      const curBooking = await Booking.findByPk(req.params.bookingId);
+
+      if (!curBooking) {
+            res.status(404);
+            return res.json({
+                  "message": "Booking couldn't be found"
+            });
+      };
+
+      if (curBooking.userId !== req.user.id) {
+            res.status(403);
+            return res.json({
+                  "message": "Forbidden"
+                });
+      };
+
+      const curDate = new Date();
+
+      if (curBooking.endDate.getTime() < curDate.getTime()) {
+            res.status(403);
+            return res.json({
+                  "message": "Past bookings can't be modified"
+                });
+      };
+
+      const allBookings = await Booking.findAll({
             where: {
-                spotId: editedBooking.spotId,
-                id: { [Op.ne]: bookingId }, // Ignore current booking (ne is not equal)
-                [Op.or]: [
-                    {
-                        startDate: {
-                            [Op.between]: [newStartDate, newEndDate]
-                        }
-                    },
-                    {
-                        endDate: {
-                            [Op.between]: [newStartDate, newEndDate]
-                        }
-                    }
-                ]
+                  spotId: curBooking.spotId
             }
-        });
+      });
 
-        if(conflictingBooking){
-            errors.date = "New booking dates conflict with an existing booking";
-        } else {
-            editedBooking.startDate = newStartDate;
-            editedBooking.endDate = newEndDate;
-        }
-    }
-    if(Object.keys(errors).length > 0){
-        return res.status(400).json({
-            "message": "Bad Request",
-            "errors": errors
-        });
-    }
+      const bookedDatesArray = [];
 
-    const finalBooking = await editedBooking.save();
-    return res.json(finalBooking)
-})
+      allBookings.forEach(bookingss => {
+            const fullBookingInfo = bookingss.toJSON();
+            const sstart = fullBookingInfo.startDate;
+            const eend = fullBookingInfo.endDate;
 
+            const allDates = datesBetween(sstart, eend);
 
-router.delete('/:bookingId', requireAuth, async (req, res, next) => {
-    const bookingId = req.params.bookingId;
-    const booking = await Booking.findByPk(bookingId, {
-        include: [
-            {
-                model: User
-            },
-            {
-                model: Spot
+            allDates.forEach(datess => {
+                  bookedDatesArray.push(datess.getTime());
+            });
+      });
+
+      //=================================================
+      // Handling date conflicts
+      //=================================================
+
+      const requestStart = new Date(startDate);
+      const requestEnd = new Date(endDate);
+      const requestedDatesArray = datesBetween(requestStart, requestEnd);
+
+      if (bookedDatesArray.includes(requestStart.getTime())) {
+            res.status(403);
+            return res.json({
+                  "message": "Sorry, this spot is already booked for the specified dates",
+                  "errors": {
+                    "startDate": "Start date conflicts with an existing booking"
+                  }
+            });
+      };
+
+      if (bookedDatesArray.includes(requestEnd.getTime())) {
+            res.status(403);
+            return res.json({
+                  "message": "Sorry, this spot is already booked for the specified dates",
+                  "errors": {
+                        "endDate": "End date conflicts with an existing booking"
+                  }
+            });
+      };
+
+      for (let i = 0; i < requestedDatesArray.length; i++) {
+            let thisDate = requestedDatesArray[i];
+            if (bookedDatesArray.includes(thisDate.getTime())) {
+                  res.status(403);
+                  return res.json({"message": "Sorry, this spot is already booked in the middle of your requested stay"})
+                  break;
+            };
+      };
+
+      const newStart = new Date(startDate);
+      const newEnd = new Date(endDate);
+
+      if (newStart.getTime() >= newEnd.getTime()) {
+            res.status(400);
+            return res.json({
+                  "message": "Bad Request",
+                  "errors": {
+                    "endDate": "endDate cannot be on or before startDate"
+                  }
+            })
+      };
+
+      await curBooking.update({
+            startDate,
+            endDate
+      });
+
+      const { id, spotId, userId, createdAt, updatedAt } = curBooking;
+
+      // ==========================================================
+      // Formatting dates
+      // ==========================================================
+
+      const s = new Date (startDate);
+
+      const sYear = s.getFullYear();
+      const preSMonth = s.getMonth() + 1;
+      const sMonth = preSMonth < 10 ? "0" + preSMonth : preSMonth;
+      const preSDay = s.getDate();
+      const sDay = preSDay < 10 ? "0" + preSDay : preSDay;
+      const sTime = s.toTimeString().substring(0, 8);
+
+      const formatedStartDate = sYear + "-" + sMonth + "-" + sDay;
+
+      //===========================
+
+      const e = new Date (endDate);
+
+      const eYear = e.getFullYear();
+      const preEMonth = e.getMonth() + 1;
+      const eMonth = preEMonth < 10 ? "0" + preEMonth : preEMonth;
+      const preEDay = e.getDate();
+      const eDay = preEDay < 10 ? "0" + preEDay : preEDay;
+      const eTime = e.toTimeString().substring(0, 8);
+
+      const formatedEndDate = eYear + "-" + eMonth + "-" + eDay;
+
+      //===========================
+
+      const c = new Date (createdAt);
+
+      const cYear = c.getFullYear();
+      const preCMonth = c.getMonth() + 1;
+      const cMonth = preCMonth < 10 ? "0" + preCMonth : preCMonth;
+      const preCDay = c.getDate();
+      const cDay = preCDay < 10 ? "0" + preCDay : preCDay;
+      const cTime = c.toTimeString().substring(0, 8);
+
+      const formatedCreatedDate = cYear + "-" + cMonth + "-" + cDay + " " + cTime;
+
+      //===========================
+
+      const u = new Date (updatedAt);
+
+      const uYear = u.getFullYear();
+      const preUMonth = u.getMonth() + 1;
+      const uMonth = preUMonth < 10 ? "0" + preUMonth : preUMonth;
+      const preUDay = u.getDate();
+      const uDay = preUDay < 10 ? "0" + preUDay : preUDay;
+      const uTime = u.toTimeString().substring(0, 8);
+
+      const formatedUpdatedDate = uYear + "-" + uMonth + "-" + uDay + " " + uTime;
+
+      // ==========================================================
+      // ==========================================================
+
+      const updatedBooking = {
+            id,
+            spotId,
+            userId,
+            startDate: formatedStartDate,
+            endDate: formatedEndDate,
+            createdAt: formatedCreatedDate,
+            updatedAt: formatedUpdatedDate
+      };
+
+      return res.json(updatedBooking);
+});
+
+router.delete("/:bookingId", requireAuth, async (req, res, next) => {
+
+      const curBooking = await Booking.findByPk(req.params.bookingId);
+
+      if (!curBooking) {
+            res.status(404);
+            return res.json({
+                  "message": "Booking couldn't be found"
+            });
+      };
+
+      const curSpot = await Spot.findOne({
+            where: {
+                  id: curBooking.spotId
             }
-        ]
-    });
-    if(!booking){
-        return res.status(404).json({
-            "message": "Booking couldn't be found"
-        })
-    }
-    const currentUser = req.user.id;
-    if(booking.userId !== currentUser && booking.Spot.ownerId !== currentUser){
-        return res.status(403).json({
-            "message": "Current user is prohibited from accessing the selected data"
-        })
-    }
+      });
 
-    const today = Date.now();
-    if(booking.startDate < today){
-        return res.status(403).json({
-            "message": "Bookings that have been started can't be deleted"
-        })
-    }
-    await booking.destroy();
-    return res.json({
-        "message": "Successfully deleted"
-    })
-})
+      if (req.user.id !== curBooking.userId && req.user.id !== curSpot.ownerId) {
+            res.status(403);
+            return res.json({
+                  "message": "Forbidden"
+            });
+      };
+
+      const curDate = new Date();
+
+      if (curDate.getTime() >= curBooking.startDate.getTime()) {
+            res.status(403);
+            return res.json({
+                  "message": "Bookings that have been started can't be deleted"
+            });
+      };
+
+      curBooking.destroy();
+
+      return res.json({"message": "Successfully deleted"});
+});
 
 
 
 
-
-
-
-
-module.exports = router
+module.exports = router;
