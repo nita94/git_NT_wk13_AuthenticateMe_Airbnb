@@ -1,42 +1,41 @@
-const express = require('express');
-const { Op, sequelize } = require('sequelize');
-const { Spot, Review, SpotImage, User, ReviewImage, Booking, Sequelize } = require('../../db/models');
-const { requireAuth } = require('../../utils/auth')
-const { check } = require('express-validator');
-const { handleValidationErrors } = require('../../utils/validation')
+const express = require("express");
+const { Op } = require("sequelize");
+const bcrypt = require("bcryptjs");
+
+const { setTokenCookie, requireAuth } = require("../../utils/auth");
+const { User, Spot, Review, Booking, ReviewImage, SpotImage } = require("../../db/models");
+
+const { check } = require("express-validator");
+const { handleValidationErrors } = require("../../utils/validation");
 
 const router = express.Router();
 
-//Delete spot image by image id
-router.delete('/:id', requireAuth, async(req, res) => {
-    const image = await SpotImage.findByPk(req.params.id);
+router.delete("/:imageId", requireAuth, async (req, res, next) => {
 
-    if (!image) {
-        res.status(404);
-        return res.json({
-            message: "Spot image couldn't be found"
-        })
-    }
+      const curImage = await SpotImage.findByPk(req.params.imageId);
 
-    const spot = await Spot.findOne({
-        where: {
-            id: image.spotId
-        }
-    });
+      if (!curImage) {
+            res.status(404);
+            return res.json({"message": "Spot Image couldn't be found"});
+      };
+
+      const curSpot = await Spot.findOne({
+            where: {
+                  id: curImage.spotId
+            }
+      });
+
+      if (curSpot.ownerId !== req.user.id) {
+            res.status(403);
+            return res.json({"message": "Forbidden"})
+      };
+
+      curImage.destroy();
+      return res.json({"message": "Successfully deleted"});
+
+});
 
 
-    if (spot.ownerId !== req.user.id) {
-        res.status(404);
-        return res.json({
-            message: "Spot can only be edited by owner"
-        })
-    };
 
-    image.destroy();
-
-    res.json({
-        message: "Successfully deleted"
-    })
-})
 
 module.exports = router;
