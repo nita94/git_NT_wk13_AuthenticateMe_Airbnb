@@ -61,7 +61,7 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     // await queryInterface.removeConstraint('Bookings', 'Bookings_endDate_check');
     options.tableName = 'Bookings'
-    await queryInterface.dropTable('Bookings', options);
+    await queryInterface.dropTable(options);
   }
   
 };
