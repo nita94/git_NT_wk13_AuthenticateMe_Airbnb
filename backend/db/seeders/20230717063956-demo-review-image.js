@@ -1,5 +1,9 @@
 'use strict';
+
 /** @type {import('sequelize-cli').Migration} */
+
+const { User, Spot, Review, Booking, ReviewImage, SpotImage } = require('../models');
+const bcrypt = require("bcryptjs");
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -7,41 +11,25 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('ReviewImages', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
+  async up (queryInterface, Sequelize) {
+    await ReviewImage.bulkCreate([
+      {
+        reviewId: 1,
+        url: "http://www.travelLA.com/1"
       },
-      reviewId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Reviews'
-        },
-        onDelete: 'CASCADE'
+      {
+        reviewId: 2,
+        url: "http://www.travelSE.com/2"
       },
-      url: {
-        type: Sequelize.STRING(256),
-        allowNull: false
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+      {
+        reviewId: 3,
+        url: "http://www.travelCHI.com/3"
       }
-    }, options);
+    ], { validate: true });
   },
 
-  async down(queryInterface, Sequelize) {
-    options.tableName = "ReviewImages";
-    await queryInterface.dropTable(options);
+  async down (queryInterface, Sequelize) {
+    options.tableName = 'ReviewImages';
+    await queryInterface.bulkDelete(options);
   }
 };
