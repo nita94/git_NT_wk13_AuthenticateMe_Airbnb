@@ -50,3 +50,6 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'Review',
     }
   );
+
+  return Review; // Add this line to return the Review class
+};
