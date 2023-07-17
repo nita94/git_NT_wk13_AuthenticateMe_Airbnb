@@ -1,30 +1,39 @@
-// SpotImage.js
-const { Model } = require('sequelize');
+"use strict";
+
+const { Model, Validator } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class SpotImage extends Model {
     static associate(models) {
-      SpotImage.belongsTo(models.Spot, { foreignKey: 'spotId', onDelete: 'CASCADE', hooks: true });
+      // define association here
+      SpotImage.belongsTo(models.Spot, {
+        foreignKey: 'spotId'
+      });
     }
-  }
+  };
 
   SpotImage.init(
     {
       spotId: {
         type: DataTypes.INTEGER,
-        references: {
-          model: 'Spots',
-        },
-        onDelete: 'CASCADE',
+        allowNull: false
       },
-      url: DataTypes.STRING,
-      preview: DataTypes.BOOLEAN,
+      url: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          len: [1,256]
+        }
+      },
+      preview: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+      }
     },
     {
       sequelize,
-      modelName: 'SpotImage',
+      modelName: "SpotImage",
     }
   );
-
   return SpotImage;
 };
