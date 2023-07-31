@@ -23,6 +23,14 @@
   },
   "homepage": "https://github.com/nita94/git_NT_wk13_AuthenticateMe_Airbnb#readme",
   "dependencies": {
-    "express-validator": "^7.0.1"
+    "dotenv": "^16.3.1",
+    "express-validator": "^7.0.1",
+    "js-cookie": "^3.0.5",
+    "react-redux": "^8.1.1",
+    "react-router-dom": "^5.3.4",
+    "redux": "^4.2.1"
+  },
+  "devDependencies": {
+    "redux-logger": "^3.0.6"
   }
 }
