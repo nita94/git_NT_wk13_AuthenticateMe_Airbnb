@@ -13,7 +13,7 @@ function App() {
 
   return (
     <>
-      <h1>corner</h1>
+      <h1>N-airBnB</h1>
       <Navigation isLoaded={isLoaded} />
       {isLoaded && (
         <Switch>
