@@ -1,10 +1,10 @@
 import { csrfFetch } from "./csrf";
 
-//types
-const SET_USER = "session/setUser";
-const REMOVE_USER = "session/removeUser";
+// Action types
+const SET_USER = "session/setUser"; // Used to set the user in the session
+const REMOVE_USER = "session/removeUser"; // Used to remove the user from the session
 
-//action creators
+// Action creators - these are functions that return actions (objects with a type property and optionally a payload)
 const setUser = (user) => {
   return {
     type: SET_USER,
@@ -18,7 +18,8 @@ const removeUser = () => {
   };
 };
 
-// How do you retain the session user information across a refresh? By loading the application after accessing the route to get the current session user GET /api/session and adding the user info to the Redux store again.
+// Thunks - these are functions that return other functions. They're used to handle async logic and dispatch actions
+// The restoreUser thunk fetches the current session user and dispatches the setUser action with the user as the payload
 export const restoreUser = () => async (dispatch) => {
   const response = await csrfFetch("/api/session");
   const data = await response.json();
@@ -26,6 +27,7 @@ export const restoreUser = () => async (dispatch) => {
   return response;
 };
 
+// The login thunk sends a POST request to log in the user. It then dispatches the setUser action with the returned user
 export const login = (user) => async (dispatch) => {
   const { credential, password } = user;
   const response = await csrfFetch("/api/session", {
@@ -40,6 +42,7 @@ export const login = (user) => async (dispatch) => {
   return response;
 };
 
+// The signup thunk sends a POST request to sign up the user. It then dispatches the setUser action with the returned user
 export const signup = (user) => async (dispatch) => {
   const { username, firstName, lastName, email, password } = user;
   const response = await csrfFetch("/api/users", {
@@ -57,6 +60,7 @@ export const signup = (user) => async (dispatch) => {
   return response;
 };
 
+// The logout thunk sends a DELETE request to log out the user. It then dispatches the removeUser action to remove the user from the session
 export const logout = () => async (dispatch) => {
   const response = await csrfFetch("/api/session", {
     method: "DELETE",
@@ -65,22 +69,23 @@ export const logout = () => async (dispatch) => {
   return response;
 };
 
-//reducers
+// Initial state for the session reducer
 const initialState = { user: null };
 
+// Reducer - this is a pure function that takes the current state and an action, and returns the new state
 const sessionReducer = (state = initialState, action) => {
   let newState;
   switch (action.type) {
     case SET_USER:
       newState = Object.assign({}, state);
-      newState.user = action.payload;
+      newState.user = action.payload; // Sets the user in the session
       return newState;
     case REMOVE_USER:
       newState = Object.assign({}, state);
-      newState.user = null;
+      newState.user = null; // Removes the user from the session
       return newState;
     default:
-      return state;
+      return state; // Returns the current state if no action types match
   }
 };
 
