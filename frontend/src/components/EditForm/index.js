@@ -5,16 +5,15 @@ import * as spotActions from '../../store/spots'
 import { useHistory, useParams } from 'react-router-dom'
 
 function EditForm() {
-    const { spotId } = useParams()
-    const allSpots = useSelector(state => state.spots.allSpots)
-    const dispatch = useDispatch()
-    const [priceError, setPriceError] = useState('')
+    const { spotId } = useParams() // Get the spot id from URL params
+    const allSpots = useSelector(state => state.spots.allSpots) // Get all spots from redux store
+    const dispatch = useDispatch() // Initialize dispatch for redux
+    const [priceError, setPriceError] = useState('') // State for price error
 
-    let spots;
-    let userSpots;
-    let currSpot;
-    let nameErrorText;
+    // Variables declaration
+    let spots, userSpots, currSpot, nameErrorText;
 
+    // Function to reset form fields
     const reset = () => {
         setCountry('')
         setStreetAddress('')
@@ -29,17 +28,19 @@ function EditForm() {
         setPriceError('')
     }
 
+    // Extracting the current spot from all spots
     if(Object.values(allSpots).length) {
         spots = Object.values(allSpots)
         userSpots = spots[0]
         currSpot = userSpots.find(singleSpot => singleSpot.id === Number(spotId))
     }
 
+    // Fetching the single spot on component mount
     useEffect(() => {
         dispatch(spotActions.fetchSingleSpot(spotId))
     }, [dispatch, spotId])
 
-
+    // States for form fields, initialized with current spot data or empty string
     const [country, setCountry] = useState(currSpot?.country || '')
     const [streetAddress, setStreetAddress] = useState(currSpot?.address || '')
     const [city, setCity] = useState(currSpot?.city || '')
@@ -49,17 +50,13 @@ function EditForm() {
     const [description, setDescription] = useState(currSpot?.description || '')
     const [spotName, setSpotName] = useState(currSpot?.name || '')
     const [price, setPrice] = useState(currSpot?.price || '')
-    //! TO DO LATER
-    // const [previewImage, setPreviewImage] = useState(currSpot?.previewImage || '')
-    // const [imgTwo, setImgTwo] = useState(singleSpot.SpotImages ? singleSpot.SpotImages[1].url : '')
-    // const [imgThree, setImgThree] = useState(singleSpot.SpotImages ? singleSpot.SpotImages[1].url : '')
-    // const [imgFour, setImgFour] = useState(singleSpot.SpotImages ? singleSpot.SpotImages[1].url : '')
-    // const [imgFive, setImgFive] = useState(singleSpot.SpotImages ? singleSpot.SpotImages[1].url : '')
-    const [errors, setErrors] = useState({})
+ 
+    const [errors, setErrors] = useState({}) // State for errors
 
-    const sessionUser = useSelector(state => state.session.user)
-    const history = useHistory()
+    const sessionUser = useSelector(state => state.session.user) // Get the current user from redux store
+    const history = useHistory() // Initialize history for navigation
 
+    // Handler for form submission
     const handleSubmit = (e) => {
         e.preventDefault()
         setErrors({})
@@ -70,6 +67,7 @@ function EditForm() {
             } else {
                 nameErrorText = ''
             }
+            // Creating the updated spot object
             const editedSpot = {
                 country: country,
                 address: streetAddress,
@@ -83,6 +81,8 @@ function EditForm() {
                 ownerId: sessionUser.id
             }
 
+            // Dispatching the updateSpot action, resetting the form and navigating to the spot page
+            // If there are errors, they are set in the state
             dispatch(spotActions.updateSpot(spotId, editedSpot)).then(() => {
                 reset()
                 history.push(`/spots/${spotId}`)
@@ -97,48 +97,11 @@ function EditForm() {
         } else {
             setErrors({ user: 'You must be logged in to update a spot!'})
         }
-
-
-
     }
 
-    // const handleSubmit = (e) => {
-    //     e.preventDefault()
-    //     setErrors({})
-    //     if(sessionUser && currSpot !== {}) {
-    //         const editedSpot = {
-    //             country: country,
-    //             address: streetAddress,
-    //             city: city,
-    //             state: addressState,
-    //             lat: latitude,
-    //             lng: longitude,
-    //             description: description,
-    //             name: spotName,
-    //             price: price,
-    //             ownerId: sessionUser.id,
-    //         }
-
-
-    //         dispatch(spotActions.updateSpot(spotId, editedSpot)).then(() => {
-    //             history.push(`/spots/${spotId}`)
-    //         })
-    //         .catch(async res => {
-    //             const data = await res.json()
-    //             if(data && data.errors) {
-    //                 setErrors(data)
-    //             }
-    //         })
-
-
-    //     } else {
-    //         setErrors({ user: 'You must be logged in to update a spot!'})
-    //     }
-
-
-
-    // }
-
+    // The form JSX returned by the component
+    // It includes inputs for different spot properties and a submit button
+    // Also includes error messages if any
 
     return (
         <div id='create-spot-form-parent-div'>
@@ -163,7 +126,6 @@ function EditForm() {
                     </div>
                     <div id='section-one-streetAddress'>
                         <label htmlFor='street-address'>Street Address</label>
-
                     </div>
                     <div>
                         <input
@@ -175,7 +137,6 @@ function EditForm() {
                         id='form-street-address-input'
                         />
                         {errors?.errors?.address ? <p className='create-form-errors-text'>{errors?.errors?.address}</p> : ''}
-
                     </div>
                     <div>
                         <div id='city-state-labels'>
@@ -190,7 +151,6 @@ function EditForm() {
                             onChange={(e) => setCity(e.target.value)}
                             placeholder='City'
                             id='city-input'
-                            // required
                             />
                             {errors?.errors?.city ? <p className='create-form-errors-text'>{errors?.errors?.city}</p> : ''}
                         <span className='comma-span'> , </span>
@@ -201,45 +161,14 @@ function EditForm() {
                             onChange={(e) => setAddressState(e.target.value)}
                             placeholder='STATE'
                             id='state-input'
-                            // required
                             />
                             {errors?.errors?.state ? <p className='create-form-errors-text'>{errors?.errors?.state}</p> : ''}
+                        </div>
                     </div>
-
-                        </div>
-                    {/* <div id='lat-lng-div'>
-                        <div id='lat-lng-labels'>
-                        <label id='lat-label' htmlFor='latitude'>Latitude</label>
-                        <label id='lng-label' htmlFor='longitude'>Longitude</label>
-                        </div>
-                            <input
-                            type='text'
-                            name='latitude'
-                            value={latitude}
-                            onChange={(e) => setLatitude(e.target.value)}
-                            placeholder='Latitude'
-                            id='lat-input'
-                            />
-                        <span className='comma-span'> , </span>
-                        <label htmlFor='longitude'>
-                        <input
-                            type='text'
-                            name='longitude'
-                            value={longitude}
-                            onChange={(e) => setLongitude(e.target.value)}
-                            placeholder='Longitude'
-                            id='lng-input'
-                            />
-                        </label>
-                        {errors?.errors?.lat ?  <p className='create-form-errors-text'>{errors?.errors?.lat}</p> : ''}
-                        {parseInt(latitude) === 'NaN' ? <p className='create-form-errors-text'>Latitude is not valid.</p>  : ''}
-                        {errors?.errors?.lng ?  <p className='create-form-errors-text'>{errors?.errors?.lng}</p> : ''}
-                        {parseInt(longitude) === 'NaN' ? <p className='create-form-errors-text'>Longitude is not valid.</p> : ''}
-                    </div> */}
                 </div>
                 <div id='form-section-two'>
                     <h2 className='form-section-header-text'>Describe your place to guests</h2>
-                    <p className='form-section-desc-text'>Mention the best features of your space, any specifal amenities like fast wifi or parking, and what you love about the neighborhood.</p>
+                    <p className='form-section-desc-text'>Mention the best features of your space, any special amenities like fast wifi or parking, and what you love about the neighborhood.</p>
                     <input
                     type='textarea'
                     placeholder='Please write at least 30 characters'
@@ -260,7 +189,6 @@ function EditForm() {
                     value={spotName}
                     onChange={(e) => setSpotName(e.target.value)}
                     id='spot-name-input'
-                    // required
                     />
                     {nameErrorText}
                     {errors?.errors?.name ? <p className='create-form-errors-text'>{errors?.errors?.name}</p> : ''}
@@ -275,9 +203,7 @@ function EditForm() {
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                     id='spot-price-input'
-                    // required
                     />
-                    {/* {errors?.errors?.price ? <p className='create-form-errors-text'>{errors?.errors?.price}</p> : ''} */}
                     {errors?.errors?.price ? <p className='create-form-errors-text'>{errors?.errors?.price}</p> : ''}
                     {priceError}
                 </div>

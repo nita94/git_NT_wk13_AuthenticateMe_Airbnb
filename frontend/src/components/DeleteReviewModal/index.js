@@ -1,19 +1,33 @@
-import './DeleteReviewModal.css'
-import React from 'react'
-import * as reviewActions from '../../store/reviews'
-import { useDispatch } from 'react-redux'
-import { useModal } from '../../context/Modal.js'
+// Importing CSS for the DeleteReviewModal component
+import './DeleteReviewModal.css';
+// Importing React library
+import React from 'react';
+// Importing review actions from the review store
+import * as reviewActions from '../../store/reviews';
+// Importing useDispatch hook from react-redux for dispatching actions
+import { useDispatch } from 'react-redux';
+// Importing useModal custom hook from context for handling modal operations
+import { useModal } from '../../context/Modal.js';
 
-function DeleteReviewModal(props) {
-    const { review } = props
-    const dispatch = useDispatch()
-    const { closeModal } = useModal()
+// Defining the DeleteReviewModal functional component
+// It receives review and props as arguments
+function DeleteReviewModal({ review, props }) {
+    // Dispatch function from useDispatch hook for dispatching actions
+    const dispatch = useDispatch();
+    // closeModal function from useModal custom hook for closing the modal
+    const { closeModal } = useModal();
 
+    // Handler for delete operation
     const handleDelete = (e) => {
+        // Preventing default form submission
         e.preventDefault()
+        // Dispatching deleteUserReview action with review id and review as arguments
+        // After the action is dispatched, it closes the modal and if onReviewDeleted function exists in props, it calls that function
         return dispatch(reviewActions.deleteUserReview(review.id, review)).then(() => { closeModal(); if (props.onReviewDeleted) props.onReviewDeleted(); })
     }
 
+    // The JSX returned by the component
+    // It includes a confirmation message and two buttons: one for confirming the deletion and the other for cancelling it
     return (
         <div id='confirm-delete-modal-parent'>
             <div id='confirm-delete-review-modal-text'>
@@ -38,4 +52,5 @@ function DeleteReviewModal(props) {
     )
 }
 
+// Exporting DeleteReviewModal as a default export
 export default DeleteReviewModal;

@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom'
 import * as spotActions from '../../store/spots.js'
 import * as reviewActions from '../../store/reviews'
-import * as spotImageActions from '../../store/spotimages'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import './SpotDetails.css'
@@ -14,16 +13,12 @@ function SpotDetails() {
     const dispatch = useDispatch()
     const [reviewsUpdated, setReviewsUpdated] = useState(false)
     const [haveSpot, setHaveSpot] = useState(false)
-    const [havePics, setHavePics] = useState(false)
-
-    let spotReviews
 
     const spot = useSelector(state => state.spots.singleSpot)
     const reviews = useSelector(state => state.reviews)
     const sessionUser = useSelector(state => state.session.user)
-    const allSpots = useSelector(state => state.spots.allSpots)
 
-    spotReviews = reviews.reviews.Reviews
+    let spotReviews = reviews.reviews.Reviews
 
     const reviewCompare = (a, b) => {
         if(a.updatedAt > b.updatedAt) {
@@ -38,7 +33,7 @@ function SpotDetails() {
     let sortedReviews;
 
     if(spotReviews?.length) {
-        sortedReviews = spotReviews.toSorted(reviewCompare)
+        sortedReviews = spotReviews.sort(reviewCompare)
     }
 
     const ownerId = spot.ownerId
@@ -163,7 +158,7 @@ function SpotDetails() {
                     <div id='booking-and-price-div'>
                         <div id='cost-and-review-info'>
                             <div id='cost-per-night'>
-                                <p>${spot.price}<span id='per-night'>night</span></p>
+                                <p>${spot.price}<span id='per-night'> night</span></p>
                             </div>
                             <div id='review-icon-and-rating'>
                                 <i id='star-favicon' className="fa-solid fa-star" style={{color: "#000000"}}></i>  {rating} {numberReviews}

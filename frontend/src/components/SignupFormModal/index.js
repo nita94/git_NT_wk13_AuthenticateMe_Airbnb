@@ -1,3 +1,4 @@
+// Import necessary hooks and actions
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal.js';
@@ -5,7 +6,10 @@ import * as sessionActions from '../../store/session';
 import './SignupForm.css';
 
 function SignupFormModal() {
+    // Setup dispatch for actions
     const dispatch = useDispatch();
+
+    // Define state for form inputs and errors
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [firstName, setFirstName] = useState('');
@@ -13,12 +17,19 @@ function SignupFormModal() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errors, setErrors] = useState({});
+
+    // Hook for controlling the modal
     const { closeModal } = useModal();
 
+    // Function to handle form submission
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // Password validation
         if(password === confirmPassword) {
             setErrors({});
+
+            // Dispatch signup action with form data
             return dispatch(
                 sessionActions.signup({
                     email,
@@ -41,6 +52,8 @@ function SignupFormModal() {
                 }
             });
         }
+
+        // Password mismatch
         return setErrors({
             confirmPassword: "Confirm Password field must be the same as the Password field"
         });

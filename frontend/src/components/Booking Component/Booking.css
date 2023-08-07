@@ -10,23 +10,18 @@
     margin-top: 30px;
     border: 1px solid black;
     border-radius: 5px;
-
 }
 
 #booking-reserve-buttons-parent {
-    /* border: 1px solid green; */
     width: 200px;
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
     margin-top: 20px;
     margin-left: 96px;
-    /* border-radius: 1px; */
-    /* border: 1px solid gray; */
 }
 
 abbr {
-    /* background-color: blue; */
     font-family: 'Montserrat', sans-serif;
     font-size: 12px;
 }
@@ -55,8 +50,6 @@ abbr {
     border-top: 2px solid lightgray;
     border-radius: 5px 5px 0 0;
     margin-bottom: 0;
-
-    /* border: 1px solid green; */
 }
 
 #check-in-text-span, #check-out-text-span {
@@ -67,7 +60,6 @@ abbr {
     padding-bottom: 0;
     padding-top: 4px;
     margin-top: 5px;
-    /* border: 1px solid red; */
 }
 
 #check-in-p-tag, #check-out-p-tag {
@@ -130,7 +122,7 @@ abbr {
     font-family: 'Montserrat', sans-serif;
     font-size: 12px;
     color: white;
-    background-color: #666666;
+    background-color: #800000; /* Changed to a maroon color */
     width: 120px;
     height: 30px;
 }
@@ -140,16 +132,18 @@ abbr {
     justify-content: space-around;
     width: 260px;
     margin-top: 15px;
-    /* flex-direction: column; */
 }
 
 .react-calendar__month-view__days {
     width: 275px;
-    border: 1px solid blue;
 }
 
 #calendar-menu-dropdown-div {
     display: flex;
     flex-flow: column nowrap;
     justify-items: center;
+}
+
+#cost-per-night {
+    padding-left: 5px; /* Added to increase spacing */
 }

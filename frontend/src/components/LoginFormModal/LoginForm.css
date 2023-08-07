@@ -2,6 +2,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #E6E6FA; /* Lavender background */
 }
 
 #login-form-div {
@@ -10,7 +11,7 @@ body {
     flex-direction: column;
     width: 300px;
     height: 250px;
-    border: 2px solid black;
+    border: 2px solid #9370DB; /* Medium purple border */
     border-radius: 10px;
 }
 
@@ -24,8 +25,8 @@ body {
 }
 
 #login-credential-input {
-    background-color: #e8f0fe;
-    border: 2px solid black;
+    background-color: #E6E6FA; /* Lavender background */
+    border: 2px solid #9370DB; /* Medium purple border */
     margin: 0 auto;
     width: 250px;
 }
@@ -41,8 +42,8 @@ body {
 }
 
 #login-password-input {
-    background-color: #e8f0fe;
-    border: 2px solid black;
+    background-color: #E6E6FA; /* Lavender background */
+    border: 2px solid #9370DB; /* Medium purple border */
     width: 250px;
     margin: 5px auto;
 }
@@ -62,16 +63,17 @@ body {
     height: 50px;
     width: 250px;
     align-self: center;
-    background-color: #eeeeee;
+    background-color: #EEEEEE; /* Light grey background */
 }
 
 #errors-display {
     color: red;
     font-size: 12px;
 }
+
 #demo-user-button {
     text-decoration: underline;
-    color: #00525e;
+    color: #00525E; /* Strong cyan - dark */
     background: white;
     border: none;
     margin-top: 15px;

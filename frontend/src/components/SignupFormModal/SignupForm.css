@@ -2,6 +2,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: lavender; /* Updated background color */
 }
 
 #signup-form-div {
@@ -12,6 +13,7 @@ body {
     height: fit-content;
     border: 2px solid black;
     border-radius: 10px;
+    background-color: lavender; /* Updated background color */
 }
 
 #signup-text {
@@ -23,17 +25,16 @@ body {
     padding-bottom: 10px;
 }
 
+#email-div, #username-div, #firstName-div, #lastName-div, #password-div, #confirmPassword-div {
+    display: flex;
+    margin: 0 auto;
+}
 
 #email-input-field, #username-input-field, #firstName-input-field, #lastName-input-field, #password-input-field, #confirmPassword-input-field {
     background-color: #e8f0fe;
     border: 2px solid black;
     margin: 4px auto;
     width: 250px;
-}
-
-#email-div, #username-div, #firstName-div, #lastName-div, #password-div, #confirmPassword-div {
-    display: flex;
-    margin: 0 auto;
 }
 
 #signup-button-div {
