@@ -8,7 +8,8 @@ This project serves as a showcase of my skills as a full-stack developer. Just l
 
 Ready to embark on an adventure? Let's jump right in!
 
-![project-landing-page]([project-landing-page.jpg](https://ibb.co/VxLPS3P))
+![project-landing-page](https://ibb.co/VxLPS3P)
+
 
 ## Technologies Used on this Project
 To build N-airbnb, I employed a variety of cutting-edge tech, including:
