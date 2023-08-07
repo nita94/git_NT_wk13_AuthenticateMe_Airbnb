@@ -4,7 +4,7 @@
 Welcome to N-airbnb, where we bring the fun, excitement, and camaraderie of the Super Smash Bros universe to the world of online accommodation booking. We've created a platform that's not just about finding a place to stay, but also about immersing you in the fantastic world of one of your favorite games.
 
 ### Why N-airbnb?
-This project serves as a showcase of my skills as a full-stack developer. Just like how Super Smash Bros is a love letter to gaming, N-airbnb is my love letter to web development. I've combined the functionality of a platform like Airbnb (including the ability to perform CRUD operations on Spots, Spot Images, Reviews, Review Images, and Bookings) with the thrilling, fun-filled aesthetics of the Smash Bros world. 
+This project serves as a showcase of my skills as a full-stack developer. Just like how Super Smash Bros is a love letter to gaming, N-airbnb is my love letter to web development. I've combined the functionality of a platform like Airbnb (including the ability to perform CRUD operations on Spots, Spot Images, Reviews, Review Images, with the thrilling, fun-filled aesthetics of the Smash Bros world. 
 
 Ready to embark on an adventure? Let's jump right in!
 
