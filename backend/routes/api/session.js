@@ -16,7 +16,7 @@ const validateLogin = [
     handleValidationErrors
 ];
 
-// log in
+
 router.post('/', validateLogin, async (req, res, next) => {
     const { credential, password } = req.body;
 
@@ -32,8 +32,7 @@ router.post('/', validateLogin, async (req, res, next) => {
     if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
         const err = new Error('The provided credentials were invalid');
         err.status = 401;
-        // err.title = 'Login failed';
-        // err.errors = { credential: 'The provided credentials were invalid.' };
+   
         res.status(401)
         return res.json({message: err.message})
     }
@@ -53,13 +52,13 @@ router.post('/', validateLogin, async (req, res, next) => {
     });
 })
 
-// log out
+
 router.delete('/', (_req, res) => {
       res.clearCookie('token');
       return res.json({ message: 'success' });
 });
 
-// get session user
+
 router.get('/', (req, res) => {
     const { user } = req;
     if (user) {

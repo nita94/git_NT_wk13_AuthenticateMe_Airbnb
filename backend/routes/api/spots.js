@@ -7,17 +7,6 @@ const router = express.Router();
 
 const { Spot, SpotImage, Review, User, ReviewImage, Booking } = require('../../db/models')
 
-// const validateSearch = [
-//     check('page').exists,
-//     check('size'),
-//     check('maxLat'),
-//     check('minLat'),
-//     check('minLng'),
-//     check('maxLng'),
-//     check('minPrice'),
-//     check('maxPrice'),
-//     handleValidationErrors
-// ]
 
 const validateReview = [
     check('review').exists({ checkFalsy: true }).notEmpty().withMessage('Review text is required'),
@@ -30,10 +19,6 @@ const validateBody = [
     check('city').exists({ checkFalsy: true }).notEmpty().withMessage('City is required'),
     check('state').exists({ checkFalsy: true }).notEmpty().withMessage('State is required'),
     check('country').exists({ checkFalsy: true }).notEmpty().withMessage('Country is required'),
-    // check('lat').exists({ checkFalsy: true }).notEmpty().isDecimal().withMessage('Latitude is not valid'),
-    // check('lat').isDecimal().withMessage('Latitude is not valid'),
-    // check('lng').exists({ checkFalsy: true }).notEmpty().isDecimal().withMessage('Longitude is not valid'),
-    // check('lng').isDecimal().withMessage('Longitude is not valid'),
     check('name').exists({ checkFalsy: true }).notEmpty().isLength({ max: 50 }).withMessage('Name must be less than 50 characters'),
     check('description').exists({ checkFalsy: true }).notEmpty().isLength({ min: 30 }).withMessage('Description is required'),
     check('description').isLength({ min: 30 }).withMessage('Please write 30 characters or more.'),
@@ -90,8 +75,6 @@ router.get('/:id/bookings', async (req, res) => {
     }
 })
 
-
-// <---------------------------- CREATE BOOKING BY SPOT ID ---------------------------->
 router.post('/:id/bookings', async (req, res) => {
     const { startDate, endDate } = req.body
     if(req.user) {
@@ -111,7 +94,6 @@ router.post('/:id/bookings', async (req, res) => {
             res.json({ message: "Forbidden" })
         }
 
-        // check booking dates of spot
         const spotBookings = await Booking.findAll({
             where: {
                 spotId: spot.id
@@ -123,8 +105,6 @@ router.post('/:id/bookings', async (req, res) => {
             errors: {}
         }
 
-        // const newStart = startDate;
-        // const newEnd = endDate;
         const c1 = startDate.split("-");
         const c2 = endDate.split("-");
 
@@ -146,10 +126,6 @@ router.post('/:id/bookings', async (req, res) => {
                 const bookingStartDate = booking.startDate;
                 const bookingEndDate = booking.endDate;
 
-
-
-
-                // splitting date into array
                 const d1 = bookingStartDate.split("-");
                 const d2 = bookingEndDate.split("-");
 
@@ -161,32 +137,9 @@ router.post('/:id/bookings', async (req, res) => {
                 const currBookEndMonth = parseInt(d2[1]-1)
                 const currBookEndDay = parseInt(d2[2])
 
-                // const newBookStartYear = parseInt(c1[0])
-                // const newBookStartMonth = parseInt(c1[1]-1)
-                // const newBookStartDay = parseInt(c1[2])
-
-                // const newBookEndYear = parseInt(c2[0])
-                // const newBookEndMonth = parseInt(c2[1]-1)
-                // const newBookEndDay = parseInt(c2[2])
-
 
                 const currBookStartDateObj = new Date(currBookStartYear, currBookStartMonth, currBookStartDay)
                 const currBookEndDateObj = new Date(currBookEndYear, currBookEndMonth, currBookEndDay)
-
-
-
-
-
-                // const currBookingStart = new Date()
-
-                // creating new date objects
-                // const from = new Date(d1[1]-1, parseInt(d1[2]), d1[0]);  // -1 because months are from 0 to 11
-                // const to   = new Date(d2[1]-1, parseInt(d2[2]), d2[0]);
-                // const check1 = new Date(c1[1]-1, parseInt(c1[2]), c1[0]);
-                // const check2 = new Date(c2[1]-1, parseInt(c2[2]), c2[0]);
-
-
-
 
 
                 if(newBookStartDateObj.getTime() >= currBookStartDateObj.getTime() && newBookStartDateObj.getTime() <= currBookEndDateObj.getTime()) {
@@ -205,7 +158,7 @@ router.post('/:id/bookings', async (req, res) => {
                 return res.json(errObj)
             }
         }
-        // checking for invalid end date
+        
         if(newBookStartDateObj >= newBookEndDateObj) {
             res.status(400)
             return res.json({

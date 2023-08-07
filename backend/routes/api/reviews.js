@@ -13,7 +13,7 @@ const validateReview = [
     handleValidationErrors
 ]
 
-// <---------------------------- GET REVIEWS OF CURRENT USER ---------------------------->
+
 router.get('/current', async (req, res) => {
     if(req.user) {
 
@@ -77,7 +77,7 @@ router.get('/current', async (req, res) => {
     }
 })
 
-// <---------------------------- ADD REVIEW IMAGE ---------------------------->
+
 router.post('/:id/images', async (req, res) => {
     const { url } = req.body
     if(req.user) {

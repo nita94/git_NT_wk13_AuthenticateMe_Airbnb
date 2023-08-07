@@ -7,18 +7,6 @@ const router = express.Router();
 
 const { Spot, SpotImage, Review, User, ReviewImage } = require('../../db/models')
 
-// router.put('/:id', async (req, res) => {
-//     if(req.user) {
-//         const spotImg = await SpotImage.scope({ method: ['deleteImage', req.params.id] }).findOne({
-//             where: {
-//                 id: req.params.id
-//             }
-//         })
-//     }
-
-//     if()
-// })
-
 router.delete('/:id', async (req, res) => {
     if(req.user) {
         const spotImg = await SpotImage.scope({ method: ['deleteImage', req.params.id] }).findOne({
