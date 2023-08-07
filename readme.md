@@ -8,7 +8,7 @@ This project serves as a showcase of my skills as a full-stack developer. Just l
 
 Ready to embark on an adventure? Let's jump right in!
 
-![project-landing-page](https://ibb.co/VxLPS3P)
+![project-landing-page](https://i.ibb.co/bF68B78/Nicks-nairbnb.png)
 
 
 ## Technologies Used on this Project
