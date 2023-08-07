@@ -3,10 +3,10 @@ const GET_REVIEWS_BY_SPOT = 'reviews/getReviewBySpot'
 const CREATE_REVIEWS = 'reviews/createReview'
 const DELETE_REVIEW = 'reviews/deleteReview'
 
-const deleteReview = (review) => {
+const deleteReview = (reviewId) => {
     return {
         type: DELETE_REVIEW,
-        payload: review,
+        payload: reviewId,
     }
 }
 
@@ -33,7 +33,7 @@ export const deleteUserReview = (id, review) => async (dispatch) => {
     })
 
     if(response.ok) {
-        dispatch(deleteReview(review))
+        dispatch(deleteReview(id)) // Pass the id, not the entire review
     }
 
     return response;
@@ -49,7 +49,7 @@ export const createNewReview = (id, review) => async (dispatch) => {
     })
     const data = await req.json()
     const newReview = data
-    dispatch(createReview)
+    dispatch(createReview(newReview)) // Pass the new review to the action creator
     return newReview;
 }
 
@@ -71,12 +71,12 @@ const reviewsReducer = (state = initialState, action) => {
             newState.reviews = action.payload
             return newState;
         case CREATE_REVIEWS:
-            newState = Object.assign({ ...state })
-            newState.reviews = action.payload
+            newState = { ...state };
+            newState.reviews = { ...state.reviews, [action.payload.id]: action.payload };
             return newState;
         case DELETE_REVIEW:
-            newState = Object.assign({ ...state })
-            delete newState.reviews[action.payload]
+            newState = { ...state };
+            delete newState.reviews[action.payload];
             return newState;
         default: return state;
     }

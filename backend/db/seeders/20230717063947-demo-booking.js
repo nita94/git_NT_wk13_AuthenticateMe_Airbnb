@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === 'production') {
 const { Spot, User, Booking } = require('../models');
 
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     options.tableName = 'Bookings';
 
     const user1 = await User.findOne({ where: { firstName: 'Nick' } });
@@ -16,11 +16,11 @@ module.exports = {
     const user4 = await User.findOne({ where: { firstName: 'Tom' } });
     const user5 = await User.findOne({ where: { firstName: 'Authy' } });
 
-    const spot1 = await Spot.findOne({ where: { address: "123 Disney Lane" } });
-    const spot2 = await Spot.findOne({ where: { address: "1010 Fake Street" } });
-    const spot3 = await Spot.findOne({ where: { address: "666 Volt Way" } });
-    const spot4 = await Spot.findOne({ where: { address: "5050 Artists Lane" } });
-    const spot5 = await Spot.findOne({ where: { address: "6060 Beauty Way" } });
+    const spot1 = await Spot.findOne({ where: { address: "1 Cosmic Vista" } });
+    const spot2 = await Spot.findOne({ where: { address: "2 Battlefield Peak" } });
+    const spot3 = await Spot.findOne({ where: { address: "8 Village Square" } });
+    const spot4 = await Spot.findOne({ where: { address: "5 Enchanted Glade" } });
+    const spot5 = await Spot.findOne({ where: { address: "7 Starfox Avenue" } });
 
     await queryInterface.bulkInsert(options, [
       { spotId: spot1.id, userId: user2.id, startDate: "2023-07-30", endDate: '2023-08-06' },
@@ -31,7 +31,7 @@ module.exports = {
     ], { validate: true });
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     options.tableName = 'Bookings';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {

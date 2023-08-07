@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as spotActions from '../../store/spots'
 import SpotCard from '../SpotCards'
@@ -12,10 +12,11 @@ function ManageSpots() {
     const final = spots[0]
 
     const dispatch = useDispatch()
+    const [spotsUpdated, setSpotsUpdated] = useState(false)
 
     useEffect(() => {
         dispatch(spotActions.fetchUserSpots())
-    }, [dispatch, final])
+    }, [dispatch, spotsUpdated])
 
  return (
     <div id='manage-spots-parent-container'>
@@ -27,7 +28,7 @@ function ManageSpots() {
             <div id='spot-card-show-div'>
                     {final && final.map((spot) => (
                         <div id='individual-card-manage-spots'>
-                            <SpotCard spot={spot} key={spot.id} user={sessionUser} />
+                            <SpotCard spot={spot} key={spot.id} user={sessionUser} onSpotDeleted={() => setSpotsUpdated(prev => !prev)} />
                         </div>))
                     }
             </div>

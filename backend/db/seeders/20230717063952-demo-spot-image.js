@@ -4,319 +4,261 @@ if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA; // define your schema in options object
 }
 
-const { Spot } = require('../models')
+const { Spot } = require('../models');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    options.tableName = 'SpotImages'
+  async up(queryInterface, Sequelize) {
+    options.tableName = 'SpotImages';
 
     const spot1 = await Spot.findOne({
       where: {
-        address: "123 Disney Lane"
+        address: "1 Cosmic Vista"
       }
-    })
+    });
 
     const spot2 = await Spot.findOne({
       where: {
-        address: "1010 Fake Street"
+        address: "2 Battlefield Peak"
       }
-    })
+    });
 
     const spot3 = await Spot.findOne({
       where: {
-        address: "2020 Volkihar Street"
+        address: "3 Pokemon Avenue"
       }
-    })
+    });
 
     const spot4 = await Spot.findOne({
       where: {
-        address: "5600 Castle Terrace"
+        address: "4 Whimsical Wonders"
       }
-    })
+    });
 
     const spot5 = await Spot.findOne({
       where: {
-        address: "5050 Artists Lane"
+        address: "5 Enchanted Glade"
       }
-    })
+    });
 
     const spot6 = await Spot.findOne({
       where: {
-        address: "5050 Lakeside Road"
+        address: "6 Triforce Keep"
       }
-    })
+    });
 
     const spot7 = await Spot.findOne({
       where: {
-        address: "6060 Beauty Way"
+        address: "7 Starfox Avenue"
       }
-    })
+    });
 
     const spot8 = await Spot.findOne({
       where: {
-        address: "666 Volt Way"
+        address: "8 Village Square"
       }
-    })
+    });
+
+    await queryInterface.bulkDelete(options, {
+      spotId: {
+        [Sequelize.Op.in]: [spot1.id, spot2.id, spot3.id, spot4.id, spot5.id, spot6.id, spot7.id, spot8.id]
+      }
+    });
 
     await queryInterface.bulkInsert(options, [
+      // Spot 1
       {
         spotId: spot1.id,
-        url: "https://images.pexels.com/photos/14043487/pexels-photo-14043487.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        url: "https://images.gamebanana.com/img/ss/mods/63fadb224a91b.jpg",
         preview: true
       },
       {
         spotId: spot1.id,
-        url: "https://images.pexels.com/photos/17177651/pexels-photo-17177651/free-photo-of-silhouette-of-windows-frame.jpeg?auto=compress&cs=tinysrgb&w=1200",
-        preview: false
-      },
-      {
-        spotId: spot1.id,
-        url: "https://images.pexels.com/photos/1170070/pexels-photo-1170070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        url: "https://images.gamebanana.com/img/ss/mods/63fad9ca2fab6.jpg",
         preview: false
       },
       {
         spotId: spot1.id,
-        url: "https://images.pexels.com/photos/6957089/pexels-photo-6957089.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        url: "https://images.gamebanana.com/img/ss/mods/63fad9d295315.jpg",
         preview: false
       },
       {
         spotId: spot1.id,
-        url: "https://images.pexels.com/photos/6957097/pexels-photo-6957097.jpeg?auto=compress&cs=tinysrgb&w=1200",
+        url: "https://images.gamebanana.com/img/ss/mods/63fad9df18c06.jpg",
         preview: false
       },
       {
-        spotId: spot2.id,
-        url: 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        preview: true
-      },
-      {
-        spotId: spot2.id,
-        url: 'https://images.pexels.com/photos/9582414/pexels-photo-9582414.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        preview: false
-      },
-      {
-        spotId: spot2.id,
-        url: 'https://images.pexels.com/photos/17386428/pexels-photo-17386428/free-photo-of-minimalist-interior-design.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        preview: false
-      },
-      {
-        spotId: spot2.id,
-        url: 'https://images.pexels.com/photos/6480707/pexels-photo-6480707.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        preview: false
-      },
-      {
-        spotId: spot2.id,
-        url: 'https://images.pexels.com/photos/534172/pexels-photo-534172.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        preview: false
-      },
-      {
-        spotId: spot3.id,
-        url: 'https://images.pexels.com/photos/145847/pexels-photo-145847.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        preview: true
-      },
-      {
-        spotId: spot3.id,
-        url: 'https://images.pexels.com/photos/218480/pexels-photo-218480.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        preview: false
-      },
-      {
-        spotId: spot3.id,
-        url: 'https://media.istockphoto.com/id/910827792/photo/3d-rendering-dark-palace.jpg?b=1&s=612x612&w=0&k=20&c=UbVe2AjYaL3UGD296RpoHKCYv3d-Rny1o9mgDFGm9Zs=',
-        preview: false
-      },
-      {
-        spotId: spot3.id,
-        url: 'https://media.istockphoto.com/id/1480594709/photo/royal-bathroom-with-a-gothic-window-in-a-castle-on-the-sea.jpg?b=1&s=612x612&w=0&k=20&c=7K75Z_A0cmKfjt8y7f8VOYz9qEJGPgQ5pKY_-xvIcdw=',
-        preview: false
-      },
-      {
-        spotId: spot3.id,
-        url: 'https://media.istockphoto.com/id/1363830876/photo/fantasy-medieval-temple-in-the-castle-3d-illustration.jpg?b=1&s=612x612&w=0&k=20&c=GMmLIdSdpBOIdwBMUcbMVroGE2OPjickNM0uQVoQcX0=',
-        preview: false
-      },
-      {
-        spotId: spot4.id,
-        url: 'https://images.pexels.com/photos/34223/mont-saint-michel-france-normandy-europe.jpg?auto=compress&cs=tinysrgb&w=1200',
-        preview: true
-      },
-      {
-        spotId: spot4.id,
-        url: 'https://images.pexels.com/photos/15996636/pexels-photo-15996636/free-photo-of-art-building-tunnel-architecture.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        preview: false
-      },
-      {
-        spotId: spot4.id,
-        url: 'https://media.istockphoto.com/id/172236366/photo/stone-staircase-and-courtyard.jpg?b=1&s=612x612&w=0&k=20&c=T14JoVRd1TUxRo8FFUAUH0lhOi8DNXtAFUdSy0erxTc=',
-        preview: false
-      },
-      {
-        spotId: spot4.id,
-        url: 'https://media.istockphoto.com/id/607477044/photo/gothic-cathedral-interior-3d-illustration.jpg?b=1&s=612x612&w=0&k=20&c=wREVjBA1bzh3GQkoOVqoE4jf0WvHL1nIcFjkc9CgRrc=',
-        preview: false
-      },
-      {
-        spotId: spot4.id,
-        url: 'https://media.istockphoto.com/id/476433490/photo/columned-arched-gothic-room.jpg?b=1&s=612x612&w=0&k=20&c=OAyGpl4HiSV2yvpfOuOuL8OKcaTeTNiubgkafjLUYk0=',
-        preview: false
-      },
-            {
-        spotId: spot5.id,
-        url: 'https://images.pexels.com/photos/5563472/pexels-photo-5563472.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        preview: true
-      },
-      {
-        spotId: spot5.id,
-        url: 'https://images.pexels.com/photos/1669799/pexels-photo-1669799.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        preview: false
-      },
-      {
-        spotId: spot5.id,
-        url: 'https://images.pexels.com/photos/931887/pexels-photo-931887.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        preview: false
-      },
-      {
-        spotId: spot5.id,
-        url: 'https://images.pexels.com/photos/139764/pexels-photo-139764.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        preview: false
-      },
-      {
-        spotId: spot5.id,
-        url: 'https://images.pexels.com/photos/17345918/pexels-photo-17345918/free-photo-of-barcelona-pavilion-in-spain.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        preview: false
-      },
-      {
-        spotId: spot6.id,
-        url: 'https://images.pexels.com/photos/1612351/pexels-photo-1612351.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        preview: true
-      },
-      {
-        spotId: spot6.id,
-        url: 'https://images.pexels.com/photos/6438744/pexels-photo-6438744.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        preview: false
-      },
-      {
-        spotId: spot6.id,
-        url: 'https://images.pexels.com/photos/2434255/pexels-photo-2434255.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        preview: false
-      },
-      {
-        spotId: spot6.id,
-        url: 'https://images.pexels.com/photos/5784432/pexels-photo-5784432.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        preview: false
-      },
-      {
-        spotId: spot6.id,
-        url: 'https://images.pexels.com/photos/9220877/pexels-photo-9220877.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        preview: false
-      },
-      {
-        spotId: spot7.id,
-        url: 'https://images.pexels.com/photos/280222/pexels-photo-280222.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        preview: true
-      },
-      {
-        spotId: spot7.id,
-        url: 'https://images.pexels.com/photos/12534075/pexels-photo-12534075.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        preview: false
-      },
-      {
-        spotId: spot7.id,
-        url: 'https://images.pexels.com/photos/7174404/pexels-photo-7174404.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        preview: false
-      },
-      {
-        spotId: spot7.id,
-        url: 'https://images.pexels.com/photos/6957087/pexels-photo-6957087.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        preview: false
-      },
-      {
-        spotId: spot7.id,
-        url: 'https://images.pexels.com/photos/6958150/pexels-photo-6958150.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        preview: false
-      },
-      {
-        spotId: spot8.id,
-        url: 'https://images.pexels.com/photos/819806/pexels-photo-819806.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        preview: true
-      },
-      {
-        spotId: spot8.id,
-        url: 'https://media.istockphoto.com/id/1288807843/photo/medieval-bedroom-with-a-large-bed.jpg?b=1&s=612x612&w=0&k=20&c=J4LGWE9VXnalnxo-oLWWuBqZT1cN8JUDU2y-_5SIR0k=',
-        preview: false
-      },
-      {
-        spotId: spot8.id,
-        url: 'https://media.istockphoto.com/id/182913408/photo/luxury-bedroom.jpg?b=1&s=612x612&w=0&k=20&c=Tx4RSxrdythLPZe7zuTkCMW08ivLDykM858qkftXFBY=',
-        preview: false
-      },
-      {
-        spotId: spot8.id,
-        url: 'https://images.pexels.com/photos/2938918/pexels-photo-2938918.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        preview: false
-      },
-      {
-        spotId: spot8.id,
-        url: 'https://images.pexels.com/photos/678047/pexels-photo-678047.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        spotId: spot1.id,
+        url: "https://images.gamebanana.com/img/ss/mods/63fad9ea0bdc5.jpg",
         preview: false
       },
 
+      // Spot 2
+      {
+        spotId: spot2.id,
+        url: "https://images.gamebanana.com/img/ss/mods/61d0b94e33087.jpg",
+        preview: true
+      },
+      {
+        spotId: spot2.id,
+        url: "https://images.gamebanana.com/img/ss/mods/61d0bb07c40ea.jpg",
+        preview: false
+      },
+      {
+        spotId: spot2.id,
+        url: "https://images.gamebanana.com/img/ss/mods/61d0bb06763b2.jpg",
+        preview: false
+      },
+      {
+        spotId: spot2.id,
+        url: "https://images.gamebanana.com/img/ss/mods/61d0bb068e624.jpg",
+        preview: false
+      },
+      {
+        spotId: spot2.id,
+        url: "https://images.gamebanana.com/img/ss/mods/61d0bb074c611.jpg",
+        preview: false
+      },
 
-    ] ,{ validate: true });
+      // Spot 3
+      {
+        spotId: spot3.id,
+        url: "https://images.gamebanana.com/img/ss/mods/60de00ba3e9ef.jpg",
+        preview: true
+      },
+      {
+        spotId: spot3.id,
+        url: "https://images.gamebanana.com/img/ss/mods/60de00c49a984.jpg",
+        preview: false
+      },
+      {
+        spotId: spot3.id,
+        url: "https://images.gamebanana.com/img/ss/mods/60de00e48c656.jpg",
+        preview: false
+      },
+      {
+        spotId: spot3.id,
+        url: "https://images.gamebanana.com/img/ss/mods/60df663362b76.jpg",
+        preview: false
+      },
+      {
+        spotId: spot3.id,
+        url: "https://images.gamebanana.com/img/ss/mods/60df663c95685.jpg",
+        preview: false
+      },
+
+      // Spot 4
+      {
+        spotId: spot4.id,
+        url: "https://images.gamebanana.com/img/ss/mods/621cf51fabef3.jpg",
+        preview: true
+      },
+      {
+        spotId: spot4.id,
+        url: "https://images.gamebanana.com/img/ss/mods/621cf51f27368.jpg",
+        preview: false
+      },
+      {
+        spotId: spot4.id,
+        url: "https://images.gamebanana.com/img/ss/mods/621cf51f600af.jpg",
+        preview: false
+      },
+      {
+        spotId: spot4.id,
+        url: "https://images.gamebanana.com/img/ss/mods/621cf51ec932c.jpg",
+        preview: false
+      },
+
+      // Spot 5
+      {
+        spotId: spot5.id,
+        url: "https://ssb.wiki.gallery/images/thumb/c/c3/SSBU-Fountain_of_Dreams.png/1600px-SSBU-Fountain_of_Dreams.png",
+        preview: true
+      },
+
+      // Spot 6
+      {
+        spotId: spot6.id,
+        url: "https://ssb.wiki.gallery/images/thumb/3/3b/SSBU-Temple.png/1600px-SSBU-Temple.png",
+        preview: true
+      },
+      {
+        spotId: spot6.id,
+        url: "https://ssb.wiki.gallery/images/thumb/5/50/SSB4UTemple.png/1600px-SSB4UTemple.png",
+        preview: false
+      },
+      {
+        spotId: spot6.id,
+        url: "https://ssb.wiki.gallery/images/b/b8/Hyrule_Temple_SSBM.png",
+        preview: false
+      },
+      {
+        spotId: spot6.id,
+        url: "https://images.gamebanana.com/img/ss/mods/615f6d0d13919.jpg",
+        preview: false
+      },
+     
+      // Spot 7
+      {
+        spotId: spot7.id,
+        url: "https://images.gamebanana.com/img/ss/mods/61cdf68c7ffee.jpg",
+        preview: true
+      },
+      {
+        spotId: spot7.id,
+        url: "https://images.gamebanana.com/img/ss/mods/61cdf6915045f.jpg",
+        preview: false
+      },
+      {
+        spotId: spot7.id,
+        url: "https://images.gamebanana.com/img/ss/mods/61cdf696948dc.jpg",
+        preview: false
+      },
+      {
+        spotId: spot7.id,
+        url: "https://images.gamebanana.com/img/ss/mods/61cdf69bbadc6.jpg",
+        preview: false
+      },
+      {
+        spotId: spot7.id,
+        url: "https://images.gamebanana.com/img/ss/mods/61cdf6a510699.jpg",
+        preview: false
+      },
+
+      // Spot 8
+      {
+        spotId: spot8.id,
+        url: "https://ssb.wiki.gallery/images/thumb/0/02/SSBU-Smashville.png/1600px-SSBU-Smashville.png",
+        preview: true
+      },
+      {
+        spotId: spot8.id,
+        url: "https://ssb.wiki.gallery/images/thumb/d/dc/SSB4USmashville.jpg/1600px-SSB4USmashville.jpg",
+        preview: false
+      },
+      {
+        spotId: spot8.id,
+        url: "https://images.gamebanana.com/img/ss/mods/607b17138fd60.jpg",
+        preview: false
+      },
+      {
+        spotId: spot8.id,
+        url: "https://images.gamebanana.com/img/ss/mods/63657dbc24050.jpg",
+        preview: false
+      },
+      {
+        spotId: spot8.id,
+        url: "https://images.gamebanana.com/img/ss/mods/628104a595680.jpg",
+        preview: false
+      },
+    ], options);
   },
 
-  async down (queryInterface, Sequelize) {
-    options.tableName = 'SpotImages';
-    const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
-      url: { [Op.in]: [
-        'https://images.pexels.com/photos/584399/living-room-couch-interior-room-584399.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        'https://images.pexels.com/photos/5563472/pexels-photo-5563472.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        'https://images.pexels.com/photos/2102587/pexels-photo-2102587.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        'https://images.pexels.com/photos/280222/pexels-photo-280222.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        'https://images.pexels.com/photos/14043487/pexels-photo-14043487.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        'https://images.pexels.com/photos/17177651/pexels-photo-17177651/free-photo-of-silhouette-of-windows-frame.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/1170070/pexels-photo-1170070.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        'https://images.pexels.com/photos/6957089/pexels-photo-6957089.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/6957097/pexels-photo-6957097.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        'https://images.pexels.com/photos/9582414/pexels-photo-9582414.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/17386428/pexels-photo-17386428/free-photo-of-minimalist-interior-design.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/6480707/pexels-photo-6480707.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/534172/pexels-photo-534172.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/145847/pexels-photo-145847.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/218480/pexels-photo-218480.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        'https://media.istockphoto.com/id/910827792/photo/3d-rendering-dark-palace.jpg?b=1&s=612x612&w=0&k=20&c=UbVe2AjYaL3UGD296RpoHKCYv3d-Rny1o9mgDFGm9Zs=',
-        'https://media.istockphoto.com/id/1480594709/photo/royal-bathroom-with-a-gothic-window-in-a-castle-on-the-sea.jpg?b=1&s=612x612&w=0&k=20&c=7K75Z_A0cmKfjt8y7f8VOYz9qEJGPgQ5pKY_-xvIcdw=',
-        'https://media.istockphoto.com/id/1363830876/photo/fantasy-medieval-temple-in-the-castle-3d-illustration.jpg?b=1&s=612x612&w=0&k=20&c=GMmLIdSdpBOIdwBMUcbMVroGE2OPjickNM0uQVoQcX0=',
-        'https://images.pexels.com/photos/34223/mont-saint-michel-france-normandy-europe.jpg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/15996636/pexels-photo-15996636/free-photo-of-art-building-tunnel-architecture.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://media.istockphoto.com/id/172236366/photo/stone-staircase-and-courtyard.jpg?b=1&s=612x612&w=0&k=20&c=T14JoVRd1TUxRo8FFUAUH0lhOi8DNXtAFUdSy0erxTc=',
-        'https://media.istockphoto.com/id/607477044/photo/gothic-cathedral-interior-3d-illustration.jpg?b=1&s=612x612&w=0&k=20&c=wREVjBA1bzh3GQkoOVqoE4jf0WvHL1nIcFjkc9CgRrc=',
-        'https://media.istockphoto.com/id/476433490/photo/columned-arched-gothic-room.jpg?b=1&s=612x612&w=0&k=20&c=OAyGpl4HiSV2yvpfOuOuL8OKcaTeTNiubgkafjLUYk0=',
-        'https://images.pexels.com/photos/5563472/pexels-photo-5563472.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        'https://images.pexels.com/photos/1669799/pexels-photo-1669799.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/931887/pexels-photo-931887.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/139764/pexels-photo-139764.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/17345918/pexels-photo-17345918/free-photo-of-barcelona-pavilion-in-spain.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/1612351/pexels-photo-1612351.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        'https://images.pexels.com/photos/6438744/pexels-photo-6438744.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/2434255/pexels-photo-2434255.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/5784432/pexels-photo-5784432.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/9220877/pexels-photo-9220877.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/280222/pexels-photo-280222.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        'https://images.pexels.com/photos/12534075/pexels-photo-12534075.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/7174404/pexels-photo-7174404.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/6957087/pexels-photo-6957087.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/6958150/pexels-photo-6958150.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        'https://images.pexels.com/photos/819806/pexels-photo-819806.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        'https://media.istockphoto.com/id/1288807843/photo/medieval-bedroom-with-a-large-bed.jpg?b=1&s=612x612&w=0&k=20&c=J4LGWE9VXnalnxo-oLWWuBqZT1cN8JUDU2y-_5SIR0k=',
-        'https://media.istockphoto.com/id/182913408/photo/luxury-bedroom.jpg?b=1&s=612x612&w=0&k=20&c=Tx4RSxrdythLPZe7zuTkCMW08ivLDykM858qkftXFBY=',
-        'https://images.pexels.com/photos/2938918/pexels-photo-2938918.jpeg?auto=compress&cs=tinysrgb&w=1200',
-        'https://images.pexels.com/photos/678047/pexels-photo-678047.jpeg?auto=compress&cs=tinysrgb&w=1200'
-
-      ] }
-    }, {});
+  down(queryInterface, Sequelize) {
+    options.tableName = 'SpotImages'; // Add this line
+  
+    return queryInterface.sequelize.transaction(async (transaction) => {
+      await queryInterface.bulkDelete(options, null, { transaction });
+    });
   }
 };

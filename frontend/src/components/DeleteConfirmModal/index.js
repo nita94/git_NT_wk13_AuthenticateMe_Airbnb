@@ -4,14 +4,16 @@ import * as spotActions from '../../store/spots'
 import { useDispatch } from 'react-redux'
 import { useModal } from '../../context/Modal.js'
 
-function DeleteConfirmModal({ spot }) {
+function DeleteConfirmModal({ spot, onSpotDeleted }) {
     const dispatch = useDispatch()
     const { closeModal } = useModal()
 
     const handleDelete  = (e) => {
         e.preventDefault()
-        dispatch(spotActions.deleteUserSpot(spot.id, spot)).then(closeModal)
-
+        dispatch(spotActions.deleteUserSpot(spot.id, spot)).then(() => {
+            closeModal()
+            onSpotDeleted()
+        })
     }
 
     return(
@@ -28,7 +30,6 @@ function DeleteConfirmModal({ spot }) {
             </div>
         </div>
     )
-
 }
 
 export default DeleteConfirmModal;

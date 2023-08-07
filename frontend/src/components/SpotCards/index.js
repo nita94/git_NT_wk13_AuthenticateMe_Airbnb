@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 import OpenModalButton from '../OpenModalButton'
 import DeleteConfirmModal from '../DeleteConfirmModal'
 
-function SpotCard({ spot, user }) {
+function SpotCard({ spot, user, onSpotDeleted }) {
     const [tooltipVisibility, setTooltipVisibility] = useState('hidden')
 
     let rating;
@@ -26,7 +26,7 @@ function SpotCard({ spot, user }) {
             <OpenModalButton
             id='delete-modal-button'
             buttonText='Delete'
-            modalComponent={<DeleteConfirmModal spot={spot} />}
+            modalComponent={<DeleteConfirmModal spot={spot} onSpotDeleted={onSpotDeleted} />}
             />
             </div>
         )

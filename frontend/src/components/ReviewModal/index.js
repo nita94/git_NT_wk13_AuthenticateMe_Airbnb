@@ -17,21 +17,23 @@ function ReviewModal({ spotId }) {
     const [fillFive, setFillFive] = useState('regular')
     const { closeModal } = useModal()
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         setErrors({})
         const newReview = {
             review: review,
             stars: stars
         }
-        return dispatch(reviewActions.createNewReview(spotId, newReview)).then(closeModal).catch(async res => {
-            const data = await res.json()
-            if(data && data.errors) {
-                setErrors(data)
-            }
-        })
+        await dispatch(reviewActions.createNewReview(spotId, newReview))
+        dispatch(reviewActions.getReviewsBySpotId(spotId)) // Fetch the reviews again
+            .then(closeModal)
+            .catch(async res => {
+                const data = await res.json()
+                if(data && data.errors) {
+                    setErrors(data)
+                }
+            })
     }
-
 
     return(
         <div id='review-modal-parent-div'>

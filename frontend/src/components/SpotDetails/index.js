@@ -12,12 +12,9 @@ import DeleteReviewModal from '../DeleteReviewModal/index.js'
 function SpotDetails() {
     const { spotId } = useParams()
     const dispatch = useDispatch()
+    const [reviewsUpdated, setReviewsUpdated] = useState(false)
     const [haveSpot, setHaveSpot] = useState(false)
     const [havePics, setHavePics] = useState(false)
-    // const history = useHistory()
-
-
-    // const [bookingActive, setBookingActive] = useState(false)
 
     let spotReviews
 
@@ -25,17 +22,8 @@ function SpotDetails() {
     const reviews = useSelector(state => state.reviews)
     const sessionUser = useSelector(state => state.session.user)
     const allSpots = useSelector(state => state.spots.allSpots)
-    // const currSpotImgs = useSelector(state => state.Spot.spotImgs)
-    // console.log(currSpotImgs)
-
-    // console.log('history: ', history)
-    // if(!spot.SpotImages) {
-    //     history.push(`/api/spots/${spotId}`)
-    // }
 
     spotReviews = reviews.reviews.Reviews
-
-
 
     const reviewCompare = (a, b) => {
         if(a.updatedAt > b.updatedAt) {
@@ -55,17 +43,10 @@ function SpotDetails() {
 
     const ownerId = spot.ownerId
 
-
     useEffect(() => {
         dispatch(spotActions.fetchSingleSpot(spotId)).then(setHaveSpot(true))
         dispatch(reviewActions.getReviewsBySpotId(spotId))
-        // dispatch(spotImageActions.fetchSpotImages(spotId))
-        // dispatch(spotActions.fetchSpots())
-    }, [dispatch, spotId, spotReviews])
-
-    // if(!spot.SpotImages) {
-    //     dispatch(spotActions.fetchSingleSpot(spotId).then(setHaveSpot(true)))
-    // }
+    }, [dispatch, spotId, reviewsUpdated])
 
     let rating;
     let spotImgs;
@@ -115,48 +96,24 @@ function SpotDetails() {
         }
         spotImgs = spot.SpotImages
 
-                if(spotImgs && spotImgs[0].url) {
-                    imgOne = spotImgs[0].url
-                }
-                if(spotImgs && spotImgs[1]) {
-                    imgTwo = spotImgs[1].url
-                }
-                if(spotImgs && spotImgs[2]) {
-                    imgThree = spotImgs[2].url
-                }
-                if(spotImgs && spotImgs[3]) {
-                    imgFour = spotImgs[3].url
-                }
-                if(spotImgs && spotImgs[4]) {
-                    imgFive = spotImgs[4].url
-                }
-
-
-
-
-
-        // if(spotImgs && spotImgs[0]) {
-        //     imgOne = spotImgs[0].url
-
-        // }
-
-
-        // if(spotImgs && spotImgs[0]) {
-        //     imgTwo = spotImgs[0].url
-        // }
-        // if(spotImgs && spotImgs[1]) {
-        //     imgThree = spotImgs[1].url
-        // }
-        // if(spotImgs&& spotImgs[2]) {
-        //     imgFour = spotImgs[2].url
-        // }
-        // if(spotImgs && spotImgs[3]) {
-        //     imgFive = spotImgs[3].url
-        // }
+        if(spotImgs && spotImgs[0].url) {
+            imgOne = spotImgs[0].url
+        }
+        if(spotImgs && spotImgs[1]) {
+            imgTwo = spotImgs[1].url
+        }
+        if(spotImgs && spotImgs[2]) {
+            imgThree = spotImgs[2].url
+        }
+        if(spotImgs && spotImgs[3]) {
+            imgFour = spotImgs[3].url
+        }
+        if(spotImgs && spotImgs[4]) {
+            imgFive = spotImgs[4].url
+        }
 
         ownerFirstName = spot.Owner?.firstName
         ownerLastName = spot.Owner?.lastName
-
 
         if(spot.numReviews) {
 
@@ -169,7 +126,6 @@ function SpotDetails() {
                 numberReviews = `· ${spot.numReviews} reviews`
             }
         }
-
     }
 
     return(
@@ -219,13 +175,6 @@ function SpotDetails() {
                             onClick={() => alert('Feature coming soon.')}
                             >Reserve</button>
                         </div>
-                        {/* <div id='booking-component-container'>
-                                {bookingActive && (
-                                    <div>
-                                        <Booking />
-                                    </div>
-                                )}
-                        </div> */}
                     </div>
                 </div>
                 <div id='all-reviews-div'>
@@ -243,15 +192,13 @@ function SpotDetails() {
                                 <div id='delete-review-button-div'>
                                     <OpenModalButton
                                         buttonText='Delete'
-                                        modalComponent={<DeleteReviewModal review={review} />}
+                                        modalComponent={<DeleteReviewModal review={review} onReviewDeleted={() => setReviewsUpdated(prev => !prev)} />}
                                     />
                                 </div>
                             ) : ''}
                         </div>
                     ))}
                 </div>
-
-
             </div>
         )}
         </>
