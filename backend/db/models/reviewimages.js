@@ -1,6 +1,7 @@
 'use strict';
-const { Model } = require('sequelize');
-
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class ReviewImage extends Model {
     /**
@@ -10,23 +11,38 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      ReviewImage.belongsTo(models.Review, { foreignKey: 'reviewId' });
+      ReviewImage.belongsTo(
+        models.Review,
+        { foreignKey: 'reviewId' }
+      )
     }
   }
-  
   ReviewImage.init({
     reviewId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'Reviews'
-      },
-      onDelete: 'CASCADE'
+      allowNull: false,
+      type: DataTypes.INTEGER
     },
-    url: DataTypes.STRING
+    url: {
+      allowNull: false,
+      type: DataTypes.STRING
+    }
   }, {
     sequelize,
     modelName: 'ReviewImage',
+    defaultScope: {
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'reviewId']
+      }
+    },
+    scopes: {
+      deleteReviewImg(id) {
+        return {
+          attributes: {
+            exclude: ['createdAt', 'updatedAt']
+          }
+        }
+      }
+    }
   });
-  
   return ReviewImage;
 };

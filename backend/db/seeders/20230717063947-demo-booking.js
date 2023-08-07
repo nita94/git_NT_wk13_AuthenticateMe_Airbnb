@@ -1,41 +1,41 @@
 'use strict';
-
-/** @type {import('sequelize-cli').Migration} */
-
-const { User, Spot, Review, Booking, ReviewImage, SpotImage } = require('../models');
-const bcrypt = require("bcryptjs");
-
 let options = {};
 if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA;  // define your schema in options object
+  options.schema = process.env.SCHEMA; // define your schema in options object
 }
 
+const { Spot, User, Booking } = require('../models');
+
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await Booking.bulkCreate([
-      {
-        spotId: 1,
-        userId: 1,
-        startDate: "2023-02-10",
-        endDate: "2023-02-20"
-      },
-      {
-        spotId: 2,
-        userId: 2,
-        startDate: "2023-07-01",
-        endDate: "2023-07-10"
-      },
-      {
-        spotId: 3,
-        userId: 3,
-        startDate: "2023-12-25",
-        endDate: "2024-01-01"
-      }
+  async up (queryInterface, Sequelize) {
+    options.tableName = 'Bookings';
+
+    const user1 = await User.findOne({ where: { firstName: 'Nick' } });
+    const user2 = await User.findOne({ where: { firstName: 'Grace' } });
+    const user3 = await User.findOne({ where: { firstName: 'Toni' } });
+    const user4 = await User.findOne({ where: { firstName: 'Tom' } });
+    const user5 = await User.findOne({ where: { firstName: 'Authy' } });
+
+    const spot1 = await Spot.findOne({ where: { address: "123 Disney Lane" } });
+    const spot2 = await Spot.findOne({ where: { address: "1010 Fake Street" } });
+    const spot3 = await Spot.findOne({ where: { address: "666 Volt Way" } });
+    const spot4 = await Spot.findOne({ where: { address: "5050 Artists Lane" } });
+    const spot5 = await Spot.findOne({ where: { address: "6060 Beauty Way" } });
+
+    await queryInterface.bulkInsert(options, [
+      { spotId: spot1.id, userId: user2.id, startDate: "2023-07-30", endDate: '2023-08-06' },
+      { spotId: spot2.id, userId: user3.id, startDate: "2023-08-01", endDate: '2023-08-04' },
+      { spotId: spot3.id, userId: user4.id, startDate: "2023-08-02", endDate: '2023-08-06' },
+      { spotId: spot4.id, userId: user5.id, startDate: "2023-07-25", endDate: '2023-08-01' },
+      { spotId: spot5.id, userId: user1.id, startDate: "2023-07-16", endDate: '2023-07-20' }
     ], { validate: true });
   },
 
-  async down(queryInterface, Sequelize) {
+  async down (queryInterface, Sequelize) {
     options.tableName = 'Bookings';
-    await queryInterface.bulkDelete(options);
+    const Op = Sequelize.Op;
+    return queryInterface.bulkDelete(options, {
+      startDate: { [Op.in]: ['2023-07-30', '2023-08-01', '2023-08-02', '2023-07-25', '2023-07-16'] }
+    }, {});
   }
 };

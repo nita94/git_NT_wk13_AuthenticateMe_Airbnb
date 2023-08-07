@@ -1,55 +1,51 @@
-const { Model } = require('sequelize');
-
+'use strict';
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Review extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
     static associate(models) {
-      Review.belongsTo(models.User, { foreignKey: 'userId' });
-      Review.belongsTo(models.Spot, { foreignKey: 'spotId' });
-      Review.hasMany(models.ReviewImage, { foreignKey: 'reviewId', onDelete: 'CASCADE', hooks: true });
+      // define association here
+      Review.belongsTo(
+        models.User,
+        { foreignKey: 'userId' }
+      )
+
+      Review.hasMany(
+        models.ReviewImage,
+        { foreignKey: 'reviewId', onDelete: 'CASCADE', hooks: true }
+      )
+
+      Review.belongsTo(
+        models.Spot,
+        { foreignKey: 'spotId' }
+      )
     }
   }
-
-  Review.init(
-    {
-      id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-      },
-      spotId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: 'Spots',
-        },
-        onDelete: 'CASCADE',
-        allowNull: false,
-      },
-      userId: {
-        type: DataTypes.INTEGER,
-        references: {
-          model: 'Users',
-        },
-        onDelete: 'CASCADE',
-        allowNull: false,
-      },
-      review: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      stars: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-          min: 0,
-          max: 5,
-        },
-      },
+  Review.init({
+    spotId: {
+      allowNull: false,
+      type: DataTypes.INTEGER
     },
-    {
-      sequelize,
-      modelName: 'Review',
+    userId: {
+      allowNull: false,
+      type: DataTypes.INTEGER
+    },
+    review: {
+      type: DataTypes.STRING
+    },
+    stars: {
+      allowNull: false,
+      type: DataTypes.INTEGER
     }
-  );
-
-  return Review; // Add this line to return the Review class
+  }, {
+    sequelize,
+    modelName: 'Review',
+  });
+  return Review;
 };

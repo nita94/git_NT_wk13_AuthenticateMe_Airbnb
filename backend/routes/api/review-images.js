@@ -1,41 +1,52 @@
-const express = require("express");
-const { Op } = require("sequelize");
-const bcrypt = require("bcryptjs");
-
-const { setTokenCookie, requireAuth } = require("../../utils/auth");
-const { User, Spot, Review, Booking, ReviewImage, SpotImage } = require("../../db/models");
-
-const { check } = require("express-validator");
-const { handleValidationErrors } = require("../../utils/validation");
-
+const express = require('express');
+const { Op } = require('sequelize');
+const { check } = require('express-validator');
+const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth.js');
+const { handleValidationErrors } = require('../../utils/validation.js');
 const router = express.Router();
 
-router.delete("/:imageId", requireAuth, async (req, res, next) => {
+const { Spot, SpotImage, Review, User, ReviewImage } = require('../../db/models')
 
-      const curImage = await ReviewImage.findByPk(req.params.imageId);
-
-      if (!curImage) {
-            res.status(404);
-            return res.json({"message": "Review Image couldn't be found"});
-      };
-
-      const curReview = await Review.findOne({
+// <---------------------------- DELETE REVIEW IMAGE ---------------------------->
+router.delete('/:id', async (req, res) => {
+    if(req.user) {
+        const reviewImg = await ReviewImage.scope({ method: ['deleteReviewImg', req.params.id] }).findOne({
             where: {
-                  id: curImage.reviewId
+                id: req.params.id
             }
-      });
-
-      if (curReview.userId !== req.user.id) {
-            res.status(403);
-            return res.json({"message": "Error:Forbidden"})
-      };
-
-      curImage.destroy();
-      return res.json({"message": "Successfully deleted"});
-
-});
+        })
 
 
 
+        if(!reviewImg) {
+            res.status(404)
+            return res.json({ message: "Review Image couldn't be found" })
+        }
+
+        const reviewId = reviewImg.dataValues.reviewId
+
+
+        const review = await Review.findOne({
+            where: {
+                id: reviewImg.dataValues.reviewId
+            }
+        })
+
+        if(reviewImg && review.dataValues.userId !== req.user.id) {
+            res.status(403)
+            return res.json({ message: "Forbidden" })
+        }
+
+        if(reviewImg && review.dataValues.userId === req.user.id) {
+            await reviewImg.destroy()
+            return res.json({ message: "Successfully deleted" })
+        }
+        // res.send('working')
+
+    } else {
+        res.status(401)
+        return res.json({ message: "Authentication required" })
+    }
+})
 
 module.exports = router;

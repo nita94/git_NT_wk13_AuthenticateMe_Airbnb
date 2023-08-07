@@ -1,107 +1,90 @@
-"use strict";
-
-const { Model, Validator } = require("sequelize");
+'use strict';
+const {
+  Model
+} = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   class Spot extends Model {
     static associate(models) {
-      // define association here
-      Spot.belongsTo(models.User, {
-        foreignKey: 'ownerId',
-        as: "Owner"
-      });
+      Spot.belongsTo(
+        models.User,
+        { foreignKey: 'ownerId' }
+      )
 
-      Spot.hasMany(models.Booking, {
-        foreignKey: 'spotId',
-        onDelete: 'CASCADE',
-        hooks: true
-      });
+      Spot.hasMany(
+        models.Booking,
+        { foreignKey: 'spotId', onDelete: 'CASCADE', hooks: true }
+      )
 
-      Spot.hasMany(models.Review, {
-        foreignKey: 'spotId',
-        onDelete: 'CASCADE',
-        hooks: true
-      });
+      Spot.hasMany(
+        models.Review,
+        { foreignKey: 'spotId', onDelete: 'CASCADE', hooks: true }
+      )
 
-      Spot.hasMany(models.SpotImage, {
-        foreignKey: 'spotId',
-        onDelete: 'CASCADE',
-        hooks: true
-      });
+      Spot.hasMany(
+        models.SpotImage,
+        { foreignKey: 'spotId', onDelete: 'CASCADE', hooks: true }
+      )
     }
-  };
+  }
 
-  Spot.init(
-    {
-      ownerId: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-      },
-      address: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          len: [1,256]
-        }
-      },
-      city: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          len: [1,30]
-        }
-      },
-      state: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          len: [1,30]
-        }
-      },
-      country: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          len: [1,30]
-        }
-      },
-      lat: {
-        type: DataTypes.DOUBLE,
-        validate: {
-          min: -90,
-          max: 90
-        }
-      },
-      lng: {
-        type: DataTypes.DOUBLE,
-        validate: {
-          min: -180,
-          max: 180
-        }
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          len: [1,256]
-        }
-      },
-      description: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          len: [1,256]
-        }
-      },
-      price: {
-        type: DataTypes.REAL,
-        allowNull: false
+  Spot.init({
+    ownerId: {
+      type: DataTypes.INTEGER
+    },
+    address: {
+      type: DataTypes.STRING
+    },
+    city: {
+      type: DataTypes.STRING
+    },
+    state: {
+      type: DataTypes.STRING
+    },
+    country: {
+      type: DataTypes.STRING
+    },
+    lat: {
+      type: DataTypes.DECIMAL
+    },
+    lng: {
+      type: DataTypes.DECIMAL
+    },
+    name: {
+      type: DataTypes.STRING,
+      validate: {
+        len: [4,50]
       }
     },
-    {
-      sequelize,
-      modelName: "Spot",
+    description: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "Description is required"
+        },
+        len: {
+          args: [30, Infinity],
+          msg: "Please write 30 characters or more."
+        }
+      }
+    },
+    price: {
+      type: DataTypes.DECIMAL
     }
-  );
+  }, {
+    sequelize,
+    modelName: 'Spot',
+    scopes: {
+      getCurrentUserReviews(id) {
+        return {
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'description']
+          }
+        }
+      }
+    }
+  });
+
   return Spot;
 };
