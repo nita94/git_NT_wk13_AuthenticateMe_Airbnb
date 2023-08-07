@@ -1,60 +1,69 @@
-// frontend/src/components/LoginFormPage/index.js
-// Render a form with a controlled input for the user login credential (username or email) and a controlled input for the user password.
-
-// On submit of the form, dispatch the login thunk action with the form input values. Make sure to handle and display errors from the login thunk action if there are any.
-import React, { useState } from "react";
-import * as sessionActions from "../../store/session";
-import { useDispatch } from "react-redux";
-import { useModal } from "../../context/Modal";
-import "./LoginForm.css";
+import React, { useState } from 'react'
+import * as sessionActions from '../../store/session'
+import { useDispatch } from 'react-redux'
+import { useModal } from '../../context/Modal.js'
+import './LoginForm.css'
 
 function LoginFormModal() {
-  const dispatch = useDispatch();
-  const [credential, setCredential] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
-  const { closeModal } = useModal();
+    const dispatch = useDispatch()
+    const [credential, setCredential] = useState('')
+    const [password, setPassword] = useState('')
+    const [errors, setErrors] = useState({})
+    const { closeModal } = useModal()
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setErrors({});
-    return dispatch(sessionActions.login({ credential, password }))
-      .then(closeModal)
-      .catch(async (res) => {
-        const data = await res.json();
-        if (data && data.errors) {
-          setErrors(data.errors);
-        }
-      });
-  };
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        setErrors({})
+        return dispatch(sessionActions.login({ credential, password }))
+        .then(closeModal)
+        .catch(async (res) => {
+            const data = await res.json()
+            if(data && data.message) {
+                setErrors(data)
+            }
+        })
+    }
 
-  return (
-    <>
-      <h1>Log In</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Username or Email
-          <input
-            type="text"
-            value={credential}
-            onChange={(e) => setCredential(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        {errors.credential && <p>{errors.credential}</p>}
-        <button type="submit" disabled={Object.keys(errors).length > 0}>Log In</button>
-      </form>
-    </>
-  );
-}
+    const handleDemoLogin = (e) => {
+        e.preventDefault()
+        return dispatch(sessionActions.login({ credential: 'authDemoUser2', password: 'password' }))
+        .then(closeModal)
+    }
+
+    return (
+        <>
+            <div id='login-form-div'>
+                <h1 id='login-text'>Log In</h1>
+                <form onSubmit={handleSubmit}>
+                    <div id='credential-div'>
+                        <input
+                            id='login-credential-input'
+                            type='text'
+                            value={credential}
+                            onChange={(e) => setCredential(e.target.value)}
+                            required
+                            placeholder='Username or Email'
+                        />
+                    </div>
+                    <div id='password-div'>
+                        <input
+                            id='login-password-input'
+                            type='password'
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            placeholder='Password'
+                        />
+                    </div>
+                    {errors.message && <p id='errors-display'>{errors.message}</p>}
+                    <div id='button-div'>
+                        <button id='login-submit-button' type='submit' disabled={(credential.length >= 4 && password.length >= 6) ? false : true} onClick={handleSubmit}>Log In</button>
+                    </div>
+                </form>
+                <button id='demo-user-button' onClick={handleDemoLogin}>Demo User</button>
+            </div>
+        </>
+    )
+};
 
 export default LoginFormModal;
