@@ -37,6 +37,12 @@
     margin-top: 5px;
 }
 
+#city-state-labels > div {
+    width: 50%;
+    display: inline-block;
+    vertical-align: top;
+}
+
 #form-country-input, #form-street-address-input, #city-input, #state-input, #lat-input, #lng-input {
     width: 340px;
     margin-top: 5px;
@@ -64,8 +70,15 @@
 
 #state-label {
     text-align: left;
-    width: 33%;
+    width: auto; 
+    min-width: 60px;
+    
 }
+
+#create-spot-form-parent-div #city-state-labels .create-form-errors-text:last-child {
+    margin-left: 24px;  /* Adjust this value as needed */
+}
+
 
 #lat-lng-labels {
     display: flex;
@@ -162,6 +175,12 @@
     color: red;
     padding: 0;
     margin-top: 0px;
+}
+
+.create-form-errors-text {
+    color: red;
+    margin: 5px 0;
+    font-size: 0.8em;  /* Adjusting the font size for error messages */
 }
 
 #city-and-state-parent-div {

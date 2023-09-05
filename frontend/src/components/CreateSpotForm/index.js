@@ -47,8 +47,25 @@ function CreateSpotForm() {
 
     // Function to handle form submission
     const handleSubmit = (e) => {
-        e.preventDefault()
-        setErrors({})
+        e.preventDefault();
+        const validationErrors = {};
+
+        if(!streetAddress) validationErrors.streetAddress = 'Address is required';
+        if(!country) validationErrors.country = 'Country is required';
+        if(!city) validationErrors.city = 'City is required';
+        if(!addressState) validationErrors.state = 'State is required';
+        if(description.length < 30) validationErrors.description = 'Description needs a minimum of 30 characters';
+        if(!spotName) validationErrors.title = 'Name is required';
+        if(!price) validationErrors.price = 'Price is required';
+        if(!previewImage) validationErrors.previewImage = 'Preview Image required';
+        
+
+        // If there are validation errors, set them to the errors state
+        if(Object.keys(validationErrors).length > 0) {
+            setErrors({errors: validationErrors});
+            return;
+        }
+
 
         // Create an array to hold the image URLs
         const spotImgs = []
@@ -94,25 +111,12 @@ function CreateSpotForm() {
 
        // Return the rendered component
        return (
-        // The parent div for the create spot form
         <div id='create-spot-form-parent-div'>
-
-            {/* Title for the form */}
             <h1 className='form-title-text'>Create a new Spot</h1>
-
-            {/* Section header */}
             <h2 className='form-section-header-text'>Where's your place located?</h2>
-
-            {/* Description for the form section */}
             <p className='form-section-desc-text'>Guests will only get your exact address once they book a reservation.</p>
-
-            {/* The form itself */}
             <form id='create-new-spot-form' onSubmit={handleSubmit}>
-
-                {/* Section for location details input */}
                 <div id='form-section-one'>
-
-                    {/* Input for country */}
                     <div id='section-one-country'>
                         <label id='country-label' htmlFor='country'>Country</label>
                     </div>
@@ -125,11 +129,8 @@ function CreateSpotForm() {
                         placeholder='Country'
                         id='form-country-input'
                         />
-                        {/* Error message for country */}
                         {errors?.errors?.country ? <p className='create-form-errors-text'>{errors?.errors?.country}</p> : ''}
                     </div>
-
-                    {/* Input for street address */}
                     <div id='section-one-streetAddress'>
                         <label htmlFor='street-address'>Street Address</label>
                     </div>
@@ -142,18 +143,21 @@ function CreateSpotForm() {
                         placeholder='Address'
                         id='form-street-address-input'
                         />
-                        {/* Error message for street address */}
                         {errors?.errors?.address ? <p className='create-form-errors-text'>{errors?.errors?.address}</p> : ''}
                     </div>
-
-                    {/* Inputs for city and state */}
                     <div id='city-and-state-parent-div'>
-                        <div id='city-state-labels'>
-                            <label id='city-label' htmlFor='city'>City</label>
-                            <label id='state-label' htmlFor='state'>State</label>
-                        </div>
+                    <div id='city-state-labels'>
+                    <div className="city-container">
+                        <label id='city-label' htmlFor='city'>City</label>
+                        {errors?.errors?.city ? <p className='create-form-errors-text'>{errors?.errors?.city}</p> : null}
+                    </div>
+                    <div className="state-container">
+                        <label id='state-label' htmlFor='state'>State</label>
+                        {errors?.errors?.state ? <p className='create-form-errors-text'>{errors?.errors?.state}</p> : null}
+                    </div>
+                </div>
+
                         <div id='city-state-div'>
-                            {/* Input for city */}
                             <input
                             type='text'
                             name='city'
@@ -161,12 +165,8 @@ function CreateSpotForm() {
                             onChange={(e) => setCity(e.target.value)}
                             placeholder='City'
                             id='city-input'
-                            // required
                             />
-                            {/* Error message for city */}
-                            {errors?.errors?.city ? <p className='create-form-errors-text'>{errors?.errors?.city}</p> : ''}
                             <span className='comma-span'> , </span>
-                            {/* Input for state */}
                             <input
                             type='text'
                             name='state'
@@ -174,10 +174,7 @@ function CreateSpotForm() {
                             onChange={(e) => setAddressState(e.target.value)}
                             placeholder='STATE'
                             id='state-input'
-                            // required
                             />
-                            {/* Error message for state */}
-                            {errors?.errors?.state ? <p className='create-form-errors-text'>{errors?.errors?.state}</p> : ''}
                         </div>
                     </div>
                 </div>
@@ -203,7 +200,6 @@ function CreateSpotForm() {
                 <div id='form-section-three'>
                     <h2 className='form-section-header-text'>Create a title for your spot</h2>
                     <p className='form-section-desc-text'>Catch guests' attention with a spot title that highlights what makes your place special.</p>
-                    {/* Input for spot name */}
                     <input
                     type='text'
                     placeholder='Name of your spot'
@@ -211,11 +207,11 @@ function CreateSpotForm() {
                     value={spotName}
                     onChange={(e) => setSpotName(e.target.value)}
                     id='spot-name-input'
-                    // required
                     />
-                    {/* Error message for spot name */}
-                    {errors?.errors?.name ? <p className='create-form-errors-text'>{errors?.errors?.name}</p> : ''}
+                    {/* Changed the error key check from name to title */}
+                    {errors?.errors?.title ? <p className='create-form-errors-text'>{errors?.errors?.title}</p> : ''}
                 </div>
+
 
                 {/* Section for spot price */}
                 <div id='form-section-four'>
@@ -244,15 +240,17 @@ function CreateSpotForm() {
                         {/* Inputs for image URLs */}
                         <div>
                             <input
-                            type='url'
-                            placeholder='Preview Image URL'
-                            name='prev-img'
-                            value={previewImage}
-                            onChange={(e) => setPreviewImage(e.target.value)}
-                            className='form-preview-img-input'
-                            // required
+                                type='url'
+                                placeholder='Preview Image URL'
+                                name='prev-img'
+                                value={previewImage}
+                                onChange={(e) => setPreviewImage(e.target.value)}
+                                className='form-preview-img-input'
                             />
+                            {/* Error message for preview image */}
+                            {errors?.errors?.previewImage ? <p className='create-form-errors-text'>{errors?.errors?.previewImage}</p> : ''}
                         </div>
+
                         <div>
                             <input
                             type='url'

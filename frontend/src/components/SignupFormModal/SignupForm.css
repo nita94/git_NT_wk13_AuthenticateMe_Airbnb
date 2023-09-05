@@ -30,6 +30,23 @@ body {
     margin: 0 auto;
 }
 
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    align-items: center;
+    width: 250px;
+    margin: 4px 0;
+}
+
+.input-error {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    text-align: center;
+}
+
+
 #email-input-field, #username-input-field, #firstName-input-field, #lastName-input-field, #password-input-field, #confirmPassword-input-field {
     background-color: #e8f0fe;
     border: 2px solid black;

@@ -56,11 +56,28 @@
     margin-bottom: 5px;
 }
 
+#create-form-errors-text {
+    font-size: 12px;
+    color: red;
+    text-align: left;
+}
+
+#city-div, #state-div {
+    display: flex;
+    flex-direction: column;
+}
+
 #city-state-div {
     display: flex;
     justify-content: space-between;
     width: 350px;
     margin-bottom: 10px;
+}
+
+#city-state-error-div {
+    display: flex;
+    justify-content: space-between;
+    width: 350px;
 }
 
 #state-label {

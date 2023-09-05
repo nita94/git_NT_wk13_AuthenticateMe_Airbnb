@@ -11,8 +11,8 @@ const validateSignup = [
     check('firstName').exists({ checkFalsy: true }).isAlpha().withMessage("First Name is required"),
     check('lastName').exists({ checkFalsy: true }).isAlpha().withMessage("Last Name is required"),
     check('email').exists({ checkFalsy: true }).isEmail().withMessage('The provided email is invalid'),
-    check('username').exists({ checkFalsy: true }).withMessage('Username is required'),
-    check('username').exists({ checkFalsy: true }).isLength({ min: 4 }).withMessage('Username is required'),
+    check('username').exists({ checkFalsy: true }).withMessage('Username must be unique'),
+    check('username').exists({ checkFalsy: true }).isLength({ min: 4 }).withMessage('Username must be unique'),
     check('username').not().isEmail().withMessage('Username is required'),
     check('password').exists({ checkFalsy: true }).isLength({ min: 6 }).withMessage('Password must be 6 characters or more.'),
     
