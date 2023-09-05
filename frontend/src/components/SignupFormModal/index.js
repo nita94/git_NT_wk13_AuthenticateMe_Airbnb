@@ -106,9 +106,6 @@ function SignupFormModal() {
                     />
                     {errors.confirmPassword && <p id='confirmPassword-errors-display'>{errors.confirmPassword}</p>}
                 </div>
-                {errors && Object.values(errors).map((error, idx) => (
-                    <p key={idx} className="signup-error">{error}</p>
-                ))}
                 <div id='signup-button-div'>
                     <button 
                         id='signup-submit-button' 

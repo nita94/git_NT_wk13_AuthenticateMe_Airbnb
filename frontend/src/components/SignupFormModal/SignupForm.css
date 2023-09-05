@@ -27,8 +27,11 @@ body {
 
 #email-div, #username-div, #firstName-div, #lastName-div, #password-div, #confirmPassword-div {
     display: flex;
-    margin: 0 auto;
+    flex-direction: column; /* Add this line to ensure content stacks vertically */
+    align-items: center; /* To center the content */
+    margin: 5px 0; /* Adjust margin for even spacing */
 }
+
 
 .input-wrapper {
     display: flex;
