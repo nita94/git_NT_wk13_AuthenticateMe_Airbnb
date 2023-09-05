@@ -67,6 +67,7 @@ const reviewsReducer = (state = initialState, action) => {
     let newState;
     switch(action.type) {
         case GET_REVIEWS_BY_SPOT:
+            console.log("review action get triggered")
             newState = Object.assign({ ...state })
             newState.reviews = action.payload
             return newState;
@@ -77,6 +78,8 @@ const reviewsReducer = (state = initialState, action) => {
         case DELETE_REVIEW:
             newState = { ...state };
             delete newState.reviews[action.payload];
+            // Remove the deleted review from spotReviews array
+            newState.reviews.Reviews = newState.reviews.Reviews.filter(review => review.id !== action.payload);
             return newState;
         default: return state;
     }
