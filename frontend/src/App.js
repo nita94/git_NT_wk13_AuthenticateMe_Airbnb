@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 import * as sessionActions from './store/session';
-import Navigation from './components/Navigation/index';
-import LandingPage from './components/LandingPage';
-import SpotDetails from './components/SpotDetails';
+import Navigation from './components/Navigation'; // Corrected import
+import LandingPage from './components/LandingPage'; // Corrected import
+import SpotDetails from './components/SpotDetails'; // Corrected import
 import CreateSpotForm from './components/CreateSpotForm';
-import ManageSpots from './components/ManageSpots';
-import EditForm from './components/EditForm';
+import ManageSpots from './components/ManageSpots'; // Corrected import
+import EditForm from './components/EditForm'; // Corrected import
 
 function App() {
   const dispatch = useDispatch();

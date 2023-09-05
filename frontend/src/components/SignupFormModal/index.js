@@ -1,4 +1,3 @@
-// Import necessary hooks and actions
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal.js';
@@ -6,10 +5,7 @@ import * as sessionActions from '../../store/session';
 import './SignupForm.css';
 
 function SignupFormModal() {
-    // Setup dispatch for actions
     const dispatch = useDispatch();
-
-    // Define state for form inputs and errors
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [firstName, setFirstName] = useState('');
@@ -18,49 +14,29 @@ function SignupFormModal() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errors, setErrors] = useState({});
 
-    // Hook for controlling the modal
     const { closeModal } = useModal();
 
-    // Function to handle form submission
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Password validation
-        if(password === confirmPassword) {
+        if (password === confirmPassword) {
             setErrors({});
 
-            // Dispatch signup action with form data
-            return dispatch(
-                sessionActions.signup({
-                    email,
-                    username,
-                    firstName,
-                    lastName,
-                    password,
-                })
-            )
-            .then(closeModal)
-            .catch(async (res) => {
+            try {
+                await dispatch(sessionActions.signup({ email, username, firstName, lastName, password }));
+                closeModal();
+            } catch (res) {
                 const data = await res.json();
                 if (data && data.errors) {
-                    const processedErrors = { ...data.errors };
-                    if (processedErrors.undefined) {
-                        processedErrors.email = processedErrors.undefined;
-                        delete processedErrors.undefined;
-                    }
-                    setErrors(processedErrors);
+                    setErrors(data.errors);
                 }
-            });
+            }
+        } else {
+            setErrors({ confirmPassword: "Confirm Password field must be the same as the Password field" });
         }
-
-        // Password mismatch
-        return setErrors({
-            confirmPassword: "Confirm Password field must be the same as the Password field"
-        });
-    }
+    };
 
     return (
-        <>
         <div id='signup-form-div'>
             <h1 id='signup-text'>Sign Up</h1>
             <form onSubmit={handleSubmit}>
@@ -111,7 +87,7 @@ function SignupFormModal() {
                 <div id='password-div'>
                     <input
                         id='password-input-field'
-                        type='text'
+                        type='password'
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
@@ -122,7 +98,7 @@ function SignupFormModal() {
                 <div id='confirmPassword-div'>
                     <input
                         id='confirmPassword-input-field'
-                        type='text'
+                        type='password'
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
@@ -130,13 +106,29 @@ function SignupFormModal() {
                     />
                     {errors.confirmPassword && <p id='confirmPassword-errors-display'>{errors.confirmPassword}</p>}
                 </div>
+                {errors && Object.values(errors).map((error, idx) => (
+                    <p key={idx} className="signup-error">{error}</p>
+                ))}
                 <div id='signup-button-div'>
-                    <button id='signup-submit-button' type='submit' onClick={handleSubmit}>Sign Up</button>
+                    <button 
+                        id='signup-submit-button' 
+                        type='submit' 
+                        disabled={
+                            !email || 
+                            !username || 
+                            !firstName || 
+                            !lastName || 
+                            !password || 
+                            !confirmPassword || 
+                            username.length < 4 || 
+                            password.length < 6
+                        }>
+                        Sign Up
+                    </button>
                 </div>
             </form>
         </div>
-        </>
-    )
+    );
 }
 
 export default SignupFormModal;

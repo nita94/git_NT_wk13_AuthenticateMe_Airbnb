@@ -14,16 +14,28 @@ import { useModal } from '../../context/Modal.js';
 function DeleteReviewModal({ review, props }) {
     // Dispatch function from useDispatch hook for dispatching actions
     const dispatch = useDispatch();
+
     // closeModal function from useModal custom hook for closing the modal
     const { closeModal } = useModal();
 
     // Handler for delete operation
-    const handleDelete = (e) => {
+    const handleDelete = async (e) => {
         // Preventing default form submission
-        e.preventDefault()
+        
+        e.preventDefault();
+        console.log("Deleting review with ID:", review.id);
         // Dispatching deleteUserReview action with review id and review as arguments
-        // After the action is dispatched, it closes the modal and if onReviewDeleted function exists in props, it calls that function
-        return dispatch(reviewActions.deleteUserReview(review.id, review)).then(() => { closeModal(); if (props.onReviewDeleted) props.onReviewDeleted(); })
+        // Using async/await to ensure the dispatch completes before moving to the next steps
+        await dispatch(reviewActions.deleteUserReview(review.id, review));
+
+        // Close the modal after the review has been deleted
+        closeModal();
+        
+        // Check if the props object exists and if onReviewDeleted is defined 
+        // before calling it. This ensures we don't try to invoke an undefined function.
+        if (props && typeof props.onReviewDeleted === 'function') {
+            props.onReviewDeleted();
+        }
     }
 
     // The JSX returned by the component
@@ -49,8 +61,9 @@ function DeleteReviewModal({ review, props }) {
                 </button>
             </div>
         </div>
-    )
+    );
 }
 
 // Exporting DeleteReviewModal as a default export
 export default DeleteReviewModal;
+
