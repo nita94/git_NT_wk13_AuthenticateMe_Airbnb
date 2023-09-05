@@ -1,156 +1,156 @@
-import { useParams } from 'react-router-dom'
-import * as spotActions from '../../store/spots.js'
-import * as reviewActions from '../../store/reviews'
-import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import './SpotDetails.css'
-import OpenModalButton from '../OpenModalButton'
-import ReviewModal from '../ReviewModal/index.js'
-import DeleteReviewModal from '../DeleteReviewModal/index.js'
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import * as spotActions from '../../store/spots';
+import * as reviewActions from '../../store/reviews';
+import './SpotDetails.css';
+import OpenModalButton from '../OpenModalButton';
+import ReviewModal from '../ReviewModal/index.js';
+import DeleteReviewModal from '../DeleteReviewModal/index.js';
 
 function SpotDetails() {
-    const { spotId } = useParams()
-    const dispatch = useDispatch()
-    const [reviewsUpdated, setReviewsUpdated] = useState(false)
-    const [haveSpot, setHaveSpot] = useState(false)
+    const { spotId } = useParams();
+    const dispatch = useDispatch();
+    const [reviewsUpdated, setReviewsUpdated] = useState(false);
+    const [haveSpot, setHaveSpot] = useState(false);
 
-    const spot = useSelector(state => state.spots.singleSpot)
-    const reviews = useSelector(state => state.reviews)
-    const sessionUser = useSelector(state => state.session.user)
+    const spot = useSelector(state => state.spots.singleSpot);
+    const reviews = useSelector(state => state.reviews);
+    const sessionUser = useSelector(state => state.session.user);
 
-    let spotReviews = reviews.reviews.Reviews
+    let spotReviews = reviews.reviews.Reviews;
 
     const reviewCompare = (a, b) => {
-        if(a.updatedAt > b.updatedAt) {
-            return -1
+        if (a.updatedAt > b.updatedAt) {
+            return -1;
         }
-        if(a.updatedAt < b.updatedAt) {
-            return 1
+        if (a.updatedAt < b.updatedAt) {
+            return 1;
         }
-        return 0
-    }
+        return 0;
+    };
 
     let sortedReviews;
 
-    if(spotReviews?.length) {
-        sortedReviews = spotReviews.sort(reviewCompare)
+    if (spotReviews?.length) {
+        sortedReviews = spotReviews.sort(reviewCompare);
     }
 
-    const ownerId = spot.ownerId
+    const ownerId = spot.ownerId;
 
     useEffect(() => {
-        dispatch(spotActions.fetchSingleSpot(spotId)).then(setHaveSpot(true))
-        dispatch(reviewActions.getReviewsBySpotId(spotId))
-    }, [dispatch, spotId, reviewsUpdated])
+        dispatch(spotActions.fetchSingleSpot(spotId)).then(() => setHaveSpot(true));
+        dispatch(reviewActions.getReviewsBySpotId(spotId));
+    }, [dispatch, spotId, reviewsUpdated]);
 
     let rating;
     let spotImgs;
-    let imgOne;
-    let imgTwo;
-    let imgThree;
-    let imgFour;
-    let imgFive;
-    let ownerFirstName;
-    let ownerLastName;
-    let numberReviews;
     let reviewButton;
-    if(haveSpot) {
-        if(spot?.avgRating === 'NaN') {
-            rating = 'New'
-            spotReviews = ''
-            sortedReviews = ''
-            if(sessionUser?.id !== ownerId) {
-                reviewButton = (
-                    <div id='review-button-parent-div'>
-                        <OpenModalButton
-                        id='review-modal-button'
-                        className='.modal-buttons'
-                        buttonText='Post Your Review'
-                        modalComponent={<ReviewModal spotId={spotId} />}
-                         />
-                        <p>Be the first to post a review!</p>
-                    </div>
-                )
+
+    let imgOne, imgTwo, imgThree, imgFour, imgFive;
+    let ownerFirstName, ownerLastName;
+    let numberReviews;
+
+    if (haveSpot) {
+        if (sessionUser) {
+            if (sessionUser.id !== spot?.userId) {
+                if (spot?.avgRating === 'NaN') {
+                    rating = 'New';
+                    reviewButton = (
+                        <div id='review-button-parent-div'>
+                            <OpenModalButton
+                                id='review-modal-button'
+                                className='modal-buttons'
+                                buttonText='Post Your Review'
+                                modalComponent={<ReviewModal spotId={spotId} />}
+                            />
+                            <p>Be the first to post a review!</p>
+                        </div>
+                    );
+                } else {
+                    rating = spot.avgRating;
+                    if (!spotReviews?.find(review => review.userId === sessionUser.id)) {
+                        reviewButton = (
+                            <div id='review-button-parent-div'>
+                                <OpenModalButton
+                                    id='review-modal-button'
+                                    className='modal-buttons'
+                                    buttonText='Post Your Review'
+                                    modalComponent={<ReviewModal spotId={spotId} />}
+                                />
+                            </div>
+                        );
+                    } else {
+                        reviewButton = '';
+                    }
+                }
             }
         } else {
-            rating = spot.avgRating
-            if((sessionUser && sessionUser.id !== ownerId) && !spotReviews?.find(review => review.userId === sessionUser.id)) {
-                reviewButton = (
-                    <div id='review-button-parent-div'>
-                        <OpenModalButton
-                        id='review-modal-button'
-                        className='.modal-buttons'
-                        buttonText='Post Your Review'
-                        modalComponent={<ReviewModal spotId={spotId} />} />
-                    </div>
-                )
+            reviewButton = '';
+        }
+    }
 
+    if (spot) {
+        spotImgs = spot.SpotImages;
+
+        if (spotImgs && spotImgs[0]?.url) {
+            imgOne = spotImgs[0].url;
+        }
+        if (spotImgs && spotImgs[1]?.url) {
+            imgTwo = spotImgs[1].url;
+        }
+        if (spotImgs && spotImgs[2]?.url) {
+            imgThree = spotImgs[2].url;
+        }
+        if (spotImgs && spotImgs[3]?.url) {
+            imgFour = spotImgs[3].url;
+        }
+        if (spotImgs && spotImgs[4]?.url) {
+            imgFive = spotImgs[4].url;
+        }
+
+        ownerFirstName = spot.Owner?.firstName;
+        ownerLastName = spot.Owner?.lastName;
+
+        if (spot.numReviews) {
+            if (spot.numReviews === 1) {
+                numberReviews = '· 1 review';
+            } else if (spot.numReviews === 0) {
+                numberReviews = '';
             } else {
-                reviewButton = ''
-            }
-        }
-        spotImgs = spot.SpotImages
-
-        if(spotImgs && spotImgs[0].url) {
-            imgOne = spotImgs[0].url
-        }
-        if(spotImgs && spotImgs[1]) {
-            imgTwo = spotImgs[1].url
-        }
-        if(spotImgs && spotImgs[2]) {
-            imgThree = spotImgs[2].url
-        }
-        if(spotImgs && spotImgs[3]) {
-            imgFour = spotImgs[3].url
-        }
-        if(spotImgs && spotImgs[4]) {
-            imgFive = spotImgs[4].url
-        }
-
-        ownerFirstName = spot.Owner?.firstName
-        ownerLastName = spot.Owner?.lastName
-
-        if(spot.numReviews) {
-
-            if(spot.numReviews === 1) {
-                numberReviews = '· 1 review'
-            } else if(spot.numReviews === 0) {
-                numberReviews = ''
-            }
-            else {
-                numberReviews = `· ${spot.numReviews} reviews`
+                numberReviews = `· ${spot.numReviews} reviews`;
             }
         }
     }
 
-    return(
+    return (
         <>
-        {spot && (
-            <div id='spot-details-parent-div'>
-                <div id='title-div'>
-                    <h1>{spot?.name}</h1>
-                    <p>{spot?.city}, {spot?.state}, {spot?.country}</p>
-                </div>
-                <div id='spot-images-div'>
-                    <div id='preview-img-div'>
-                        <img id='preview-image-main' src={imgOne} alt='test spot preview' />
+            {spot && (
+                <div id='spot-details-parent-div'>
+                    <div id='title-div'>
+                        <h1>{spot?.name}</h1>
+                        <p>{spot?.city}, {spot?.state}, {spot?.country}</p>
                     </div>
-                    <div id='other-spot-images'>
-                        <div id='optional-img-one'>
-                            {imgTwo && <img className='other-spot-img' src={imgTwo} alt='preview two'/>}
+                    <div id='spot-images-div'>
+                        <div id='preview-img-div'>
+                            <img id='preview-image-main' src={imgOne} alt='test spot preview' />
                         </div>
-                        <div id='optional-img-two'>
-                            {imgThree && <img className='other-spot-img' src={imgThree} alt='preview three'/>}
-                        </div>
-                        <div id='optional-img-three'>
-                            {imgFour && <img className='other-spot-img' src={imgFour} alt='preview four'/>}
-                        </div>
-                        <div id='optional-img-four'>
-                            {imgFive && <img id='optional-img-four' className='other-spot-img' src={imgFive} alt='preview five'/>}
+                        <div id='other-spot-images'>
+                            <div id='optional-img-one'>
+                                {imgTwo && <img className='other-spot-img' src={imgTwo} alt='preview two' />}
+                            </div>
+                            <div id='optional-img-two'>
+                                {imgThree && <img className='other-spot-img' src={imgThree} alt='preview three' />}
+                            </div>
+                            <div id='optional-img-three'>
+                                {imgFour && <img className='other-spot-img' src={imgFour} alt='preview four' />}
+                            </div>
+                            <div id='optional-img-four'>
+                                {imgFive && <img id='optional-img-four' className='other-spot-img' src={imgFive} alt='preview five' />}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div id='hosted-by-and-description'>
+                    <div id='hosted-by-and-description'>
                     <div id='info-text'>
                         <h2>Hosted by {ownerFirstName} {ownerLastName}</h2>
                         <p>{spot.description}</p>
